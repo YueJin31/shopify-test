@@ -1,0 +1,207 @@
+{% liquid
+  assign pre_heading = section.settings['pre-heading']
+  assign heading = section.settings.heading
+  assign blocks_size = section.blocks.size
+%}
+
+<div class="bestsellers__wrapper">
+  <nav class="bestsellers__nav">
+    <header class="bestsellers__header">
+      {% if pre_heading != blank %}
+        <p class="bestsellers__header-preheading">{{ pre_heading }}</p>
+      {% endif %}
+
+      {% if heading != blank %}
+        <h2 class="bestsellers__header-heading">{{ heading }}</h2>
+      {% endif %}
+    </header>
+
+    {% if blocks_size > 0 %}
+      <div class="bestsellers__items">
+        {% for block in section.blocks %}
+          {% assign collection_title = block.settings['custom-collection'] | default: block.settings.collection.title %}
+
+          {% if collection_title != blank %}
+            <div class="bestsellers__item ">
+              <button type="button" class="bestsellers__item-link">
+                <h3 class="bestsellers__item-title">{{ collection_title }}</h3>
+              </button>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </nav>
+
+  {% if blocks_size > 0 %}
+    <div class="bestsellers__content">
+      {% for block in section.blocks %}
+        {% assign collection_title = block.settings['custom-collection'] | default: block.settings.collection.title %}
+
+        {% liquid
+          assign collection_product = block.settings.collection.products.first | default: collections.all.products.first
+          assign product = block.settings['custom-product'] | default: collection_product
+        %}
+
+        {% if product and collection_title %}
+          {% liquid
+            assign product_title = product.title
+            assign product_tags = product.tags
+            assign product_price = product.price | money
+            assign product_price_old = product.compare_at_price | money
+            assign product_image = product.featured_image
+            assign product_url = product.url
+            assign product_id = product.variants.first.id
+            assign product_quantity = product.variants.first.inventory_quantity
+          %}
+
+          <div class="bestsellers__panel">
+            <div class="bestsellers__panel-inner">
+              <div class="bestsellers__panel-actions">
+                <button
+                  class="bestsellers__panel-action bestsellers__panel-action--wishlist js-add-to-cart"
+                  aria-label="Add to wishlist"
+                  data-variant-id="{{ product_id }}"
+                  data-available-quantity="{{ product_quantity }}"
+                >
+                  <strong>{{ product_quantity }}</strong>
+                </button>
+
+                <button
+                  data-title="{{ product_title }}"
+                  class="bestsellers__panel-action bestsellers__panel-action--watch js-create-modal"
+                  aria-label="Quick view"
+                ></button>
+
+                <button
+                  class="bestsellers__panel-action bestsellers__panel-action--bookmark"
+                  aria-label="Bookmark product"
+                ></button>
+              </div>
+
+              {% if product_tags.size > 0 %}
+                <div class="bestsellers__panel-tags">
+                  {% for tag in product_tags %}
+                    {% assign sale_class = tag | downcase %}
+
+                    <span class="bestsellers__panel-tag {% if sale_class contains 'sale' %}bestsellers__panel-tag--sale{% endif %}">
+                      {{ tag | capitalize }}
+                    </span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              <a class="bestsellers__panel-link" href="{{ product_url }}">
+                <picture class="bestsellers__panel-picture">
+                  {% if product_image %}
+                    <source
+                      media="(max-width: 420px)"
+                      srcset="
+                        {{ product_image | image_url: height: 350 }} 1x,
+                        {{ product_image | image_url: height: 700 }} 2x
+                      "
+                      type="image/webp"
+                    >
+
+                    <source
+                      media="(max-width: 991px)"
+                      srcset="
+                        {{ product_image | image_url: height: 800 }} 1x,
+                        {{ product_image | image_url: height: 1600 }} 2x
+                      "
+                      type="image/webp"
+                    >
+
+                    <img
+                      class="bestsellers__panel-image"
+                      src="{{ product_image | image_url: height: 900 }}"
+                      srcset="{{ product_image | image_url: height: 1800 }} 2x"
+                      alt="{{ product_image.alt | escape | default: product_title }}"
+                      loading="lazy"
+                      width="{{ product_image.width }}"
+                      height="{{ product_image.height }}"
+                    >
+                  {% endif %}
+                </picture>
+
+                <div class="bestsellers__panel-product-info">
+                  <p class="bestsellers__panel-name">{{ product_title }}</p>
+
+                  <div class="bestsellers__panel-price-info">
+                    {% if product_price != blank %}
+                      <span class="bestsellers__panel-price">{{ product_price }}</span>
+                    {% endif %}
+
+                    {% if product_price_old != blank %}
+                      <span class="bestsellers__panel-price bestsellers__panel-price--old">
+                        {{ product_price_old }}
+                      </span>
+                    {% endif %}
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+{{ 'section-bestsellers.css' | asset_url | stylesheet_tag }}
+{{ 'modal.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'section-bestsellers.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Bestsellers",
+  "tag": "section",
+  "class": "bestsellers section",
+  "limit": 2,
+  "settings": [
+    {
+      "type": "text",
+      "id": "pre-heading",
+      "label": "Pre heading",
+      "default": "Pre Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Collection",
+      "type": "collection",
+      "limit": 3,
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "custom-collection",
+          "label": "Custom collection"
+        },
+        {
+          "type": "product",
+          "id": "custom-product",
+          "label": "Custom product"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bestsellers",
+      "category": "Custom Sections"
+    }
+  ]
+}
+{% endschema %}

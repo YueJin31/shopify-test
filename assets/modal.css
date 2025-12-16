@@ -1,0 +1,64 @@
+.modal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0 0 0 / 70%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(1.1);
+  z-index: 9999;
+  transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+}
+
+.modal__content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--white);
+  padding: 32px 40px;
+  max-width: 450px;
+  width: 100%;
+  border-radius: 16px;
+}
+
+@media screen and (max-width: 767px) {
+  .modal__content {
+    max-width: 95%;
+  }
+}
+
+.modal__close-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--light-gray);
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 30px;
+}
+
+.modal__text {
+  text-align: center;
+  margin-top: 35px;
+
+  @media screen and (max-width: 767px) {
+    font-size: 28px;
+  }
+}
+
+.modal.show {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+  pointer-events: all;
+}
