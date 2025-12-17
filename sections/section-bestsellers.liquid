@@ -1,5 +1,5 @@
 {% liquid
-  assign pre_heading = section.settings['pre-heading']
+  assign pre_heading = section.settings.pre_heading
   assign heading = section.settings.heading
   assign blocks_size = section.blocks.size
 %}
@@ -45,14 +45,8 @@
 
         {% if product and collection_title %}
           {% liquid
-            assign product_title = product.title
-            assign product_tags = product.tags
-            assign product_price = product.price | money
-            assign product_price_old = product.compare_at_price | money
             assign product_image = product.featured_image
-            assign product_url = product.url
-            assign product_id = product.variants.first.id
-            assign product_quantity = product.variants.first.inventory_quantity
+            assign product_variant_id = product.selected_or_first_available_variant.id
           %}
 
           <div class="bestsellers__panel">
@@ -61,12 +55,12 @@
                 <button
                   class="bestsellers__panel-action bestsellers__panel-action--wishlist js-add-to-cart"
                   aria-label="Add to wishlist"
-                  data-variant-id="{{ product_id }}"
-                  data-available-quantity="{{ product_quantity }}"
+                  data-variant-id="{{ product_variant_id }}"
+                  data-available-quantity="{{ product.variants.first.inventory_quantity }}"
                 ></button>
 
                 <button
-                  data-title="{{ product_title }}"
+                  data-title="{{ product.title }}"
                   class="bestsellers__panel-action bestsellers__panel-action--watch js-create-modal"
                   aria-label="Quick view"
                 ></button>
@@ -77,9 +71,9 @@
                 ></button>
               </div>
 
-              {% if product_tags.size > 0 %}
+              {% if product.tags.size > 0 %}
                 <div class="bestsellers__panel-tags">
-                  {% for tag in product_tags %}
+                  {% for tag in product.tags %}
                     {% assign sale_class = tag | downcase %}
 
                     <span class="bestsellers__panel-tag {% if sale_class contains 'sale' %}bestsellers__panel-tag--sale{% endif %}">
@@ -89,7 +83,7 @@
                 </div>
               {% endif %}
 
-              <a class="bestsellers__panel-link" href="{{ product_url }}">
+              <a class="bestsellers__panel-link" href="{{ product.url }}">
                 <picture class="bestsellers__panel-picture">
                   {% if product_image %}
                     <source
@@ -114,7 +108,7 @@
                       class="bestsellers__panel-image"
                       src="{{ product_image | image_url: height: 900 }}"
                       srcset="{{ product_image | image_url: height: 1800 }} 2x"
-                      alt="{{ product_image.alt | escape | default: product_title }}"
+                      alt="{{ product_image.alt | escape | default: product.title }}"
                       loading="lazy"
                       width="{{ product_image.width }}"
                       height="{{ product_image.height }}"
@@ -123,16 +117,14 @@
                 </picture>
 
                 <div class="bestsellers__panel-product-info">
-                  <p class="bestsellers__panel-name">{{ product_title }}</p>
+                  <p class="bestsellers__panel-name">{{ product.title }}</p>
 
                   <div class="bestsellers__panel-price-info">
-                    {% if product_price != blank %}
-                      <span class="bestsellers__panel-price">{{ product_price }}</span>
-                    {% endif %}
+                    <span class="bestsellers__panel-price">{{ product.price | money }}</span>
 
-                    {% if product_price_old != blank %}
+                    {% if product.compare_at_price != blank %}
                       <span class="bestsellers__panel-price bestsellers__panel-price--old">
-                        {{ product_price_old }}
+                        {{ product.compare_at_price | money }}
                       </span>
                     {% endif %}
                   </div>
@@ -160,7 +152,7 @@
   "settings": [
     {
       "type": "text",
-      "id": "pre-heading",
+      "id": "pre_heading",
       "label": "Pre heading",
       "default": "Pre Heading"
     },

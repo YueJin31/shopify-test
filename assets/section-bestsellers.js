@@ -194,13 +194,6 @@ function addToCart() {
       button.disabled = true;
 
       try {
-        const canAddToCart = await checkCartQuantity(variantId, availableQuantity);
-
-        if (!canAddToCart) {
-          showCartNotification("You have reached the maximum quantity of the product available.", true);
-          return;
-        }
-
         const response = await fetch(window.Shopify.routes.root + "cart/add.js", {
           method: "POST",
           headers: {
@@ -238,30 +231,6 @@ function addToCart() {
       }
     });
   });
-}
-
-/**
- *
- * @param {number} variantId
- * @param {number|null} availableQuantity
- * @returns {Promise<boolean>}
- */
-async function checkCartQuantity(variantId, availableQuantity) {
-  if (availableQuantity === null) return true;
-
-  const response = await fetch(window.Shopify.routes.root + "cart.js");
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
-  }
-
-  const cart = await response.json();
-
-  const cartItem = cart.items.find((/** @type {{ variant_id: number; }} */ item) => item.variant_id === variantId);
-
-  if (!cartItem) return true;
-
-  return cartItem.quantity < availableQuantity;
 }
 
 /**
