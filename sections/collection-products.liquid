@@ -65,12 +65,12 @@
     </div>
   </div>
 
-  {% assign section_products = section.settings.collection.products | default: collections.all.products %}
+  {% assign collection_products = section.settings.collection.products | default: collections.all.products %}
 
-  {% if section_products %}
+  {% if collection_products %}
     <div class="collection-products__list swiper">
       <div class="swiper-wrapper">
-        {% for product in section_products %}
+        {% for product in collection_products %}
           <div class="collection-products__item swiper-slide">
             <div class="collection-products__item-image-wrapper">
               {% if product.tags.size > 0 %}
