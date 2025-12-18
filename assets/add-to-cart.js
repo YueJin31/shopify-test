@@ -38,7 +38,7 @@ async function handleAddToCart(button, variantId) {
     dispatchCartUpdate(variantId);
     showCartNotification("Added to cart");
   } catch (error) {
-    showCartNotification(error, true);
+    showCartNotification(error.message, true);
   } finally {
     button.disabled = wasDisabled;
   }
@@ -47,22 +47,14 @@ async function handleAddToCart(button, variantId) {
 function addItemToCart(variantId, quantity = 1) {
   return fetch(`${window.Shopify.routes.root}cart/add.js`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      items: [
-        {
-          id: variantId,
-          quantity,
-        },
-      ],
-    }),
-  }).then((response) => {
-    if (!response.ok) {
-      throw new Error("Cart add request failed");
-    }
-    return response.json();
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ items: [{ id: variantId, quantity }] }),
+  }).then(async (response) => {
+    const data = await response.json();
+
+    if (!response.ok) throw new Error(data.message || "Cart add request failed");
+
+    return data;
   });
 }
 
