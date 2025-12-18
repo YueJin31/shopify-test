@@ -38,8 +38,7 @@ async function handleAddToCart(button, variantId) {
     dispatchCartUpdate(variantId);
     showCartNotification("Added to cart");
   } catch (error) {
-    console.error(error);
-    showCartNotification("Failed to add to cart", true);
+    showCartNotification(error, true);
   } finally {
     button.disabled = wasDisabled;
   }
