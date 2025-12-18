@@ -3,7 +3,6 @@ const COLLECTION_SELECTORS = {
   swatchContainer: ".js-color-watch",
   swatchItem: ".js-color-watch-item",
   swiperContainer: ".swiper",
-  swiperSlide: ".swiper-slide",
   swiperPagination: ".swiper-pagination",
   swiperPrevBtn: ".swiper-button-prev",
   swiperNextBtn: ".swiper-button-next",
