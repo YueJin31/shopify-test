@@ -135,7 +135,7 @@ class Bestsellers {
   }
 }
 
-function InitCollectionProducts() {
+function InitBestsellers() {
   document.querySelectorAll(BESTSELLERS_SELECTORS.block).forEach((template) => {
     if (!template.dataset.bestsellersInit) {
       new Bestsellers(template).init();
@@ -146,9 +146,9 @@ function InitCollectionProducts() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  InitCollectionProducts();
+  InitBestsellers();
 });
 
-document.addEventListener("shopify:section:load", InitCollectionProducts);
-document.addEventListener("shopify:section:select", InitCollectionProducts);
-document.addEventListener("shopify:section:reorder", InitCollectionProducts);
+document.addEventListener("shopify:section:load", InitBestsellers);
+document.addEventListener("shopify:section:select", InitBestsellers);
+document.addEventListener("shopify:section:reorder", InitBestsellers);
