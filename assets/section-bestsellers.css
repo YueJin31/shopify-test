@@ -8,8 +8,11 @@
   --medium-gray: #9d9d9d;
 }
 
-.bestsellers + .bestsellers {
-  margin-top: 100px;
+.bestsellers {
+  + .bestsellers,
+  &:first-of-type {
+    margin-top: 100px;
+  }
 }
 
 .bestsellers__wrapper {
