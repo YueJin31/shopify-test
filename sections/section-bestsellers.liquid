@@ -22,8 +22,8 @@
           {% assign collection_title = block.settings['custom-collection'] | default: block.settings.collection.title %}
 
           {% if collection_title != blank %}
-            <div class="bestsellers__item ">
-              <button type="button" class="bestsellers__item-link">
+            <div class="bestsellers__item js-bestsellers-item">
+              <button type="button" class="bestsellers__item-link js-bestsellers-item-link">
                 <h3 class="bestsellers__item-title">{{ collection_title }}</h3>
               </button>
             </div>
@@ -49,7 +49,7 @@
             assign product_variant_id = product.selected_or_first_available_variant.id
           %}
 
-          <div class="bestsellers__panel">
+          <div class="bestsellers__panel js-bestsellers-panel">
             <div class="bestsellers__panel-inner">
               <div class="bestsellers__panel-actions">
                 <button
@@ -139,15 +139,17 @@
 </div>
 
 {{ 'section-bestsellers.css' | asset_url | stylesheet_tag }}
+{{ 'cart-notification.css' | asset_url | stylesheet_tag }}
 {{ 'modal.css' | asset_url | stylesheet_tag }}
 
 <script src="{{ 'section-bestsellers.js' | asset_url }}" defer></script>
+<script src="{{ 'add-to-cart.js' | asset_url }}" defer></script>
 
 {% schema %}
 {
   "name": "Bestsellers",
   "tag": "section",
-  "class": "bestsellers section",
+  "class": "bestsellers section js-bestsellers",
   "limit": 2,
   "settings": [
     {

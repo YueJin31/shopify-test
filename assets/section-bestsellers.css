@@ -8,6 +8,10 @@
   --medium-gray: #9d9d9d;
 }
 
+.bestsellers + .bestsellers {
+  margin-top: 100px;
+}
+
 .bestsellers__wrapper {
   display: flex;
   gap: 80px;
@@ -53,19 +57,19 @@
 
 .bestsellers__nav {
   width: 100%;
-  flex-shrink: 0;
   align-self: center;
 }
 
 @media screen and (min-width: 1023px) {
   .bestsellers__nav {
-    max-width: 450px;
+    max-width: 50%;
   }
 }
 
-@media screen and (min-width: 1280px) {
+@media screen and (min-width: 1440px) {
   .bestsellers__nav {
     max-width: 688px;
+    flex-shrink: 0;
   }
 }
 
@@ -191,6 +195,7 @@
   flex-direction: column;
   position: absolute;
   top: 16px;
+
   z-index: 1;
 }
 
@@ -300,6 +305,7 @@
 
 .bestsellers__panel-action--wishlist:disabled {
   cursor: not-allowed;
+  opacity: 0.7;
 }
 
 .bestsellers__panel-action--watch::after {
@@ -365,67 +371,4 @@
   height: 100%;
   object-fit: cover;
   transition: transform 1s ease;
-}
-
-.cart-notification {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 16px 24px;
-  color: white;
-  border-radius: 12px;
-  z-index: 9999;
-  animation: cartNotificationSlideIn 0.3s ease forwards;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  max-width: 350px;
-}
-
-.cart-notification .progress-bar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: rgba(255 255 255 / 50%);
-  overflow: hidden;
-}
-
-.cart-notification .progress-bar > div {
-  height: 100%;
-  width: 100%;
-  background: rgba(255 255 255 / 70%);
-  animation: cartNotificationProgress 1s linear forwards;
-}
-
-@keyframes cartNotificationSlideIn {
-  from {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes cartNotificationSlideOut {
-  from {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  to {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-}
-
-@keyframes cartNotificationProgress {
-  from {
-    width: 100%;
-  }
-  to {
-    width: 0%;
-  }
 }

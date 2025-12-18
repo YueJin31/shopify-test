@@ -1,0 +1,211 @@
+<div class="collection-products__wrapper">
+  <div class="collection-products__banner">
+    {% if section.settings.collection_custom_image %}
+      {% assign collection_banner = section.settings.collection_custom_image %}
+    {% elsif section.settings.collection.image %}
+      {% assign collection_banner = section.settings.collection.image %}
+    {% else %}
+      {% assign collection_banner = 'collection-placeholder' %}
+    {% endif %}
+
+    {% if collection_banner == 'collection-placeholder' %}
+      <div class="collection-products__banner-placeholder">
+        {{ 'collection-apparel-1' | placeholder_svg_tag: 'collection-products__banner-placeholder-svg' }}
+      </div>
+    {% else %}
+      <picture class="collection-products__banner-picture">
+        <source
+          media="(max-width: 420px)"
+          srcset="
+            {{ collection_banner | image_url: height: 350 }} 1x,
+            {{ collection_banner | image_url: height: 700 }} 2x
+          "
+          type="image/webp"
+        >
+
+        <source
+          media="(max-width: 991px)"
+          srcset="
+            {{ collection_banner | image_url: height: 400 }} 1x,
+            {{ collection_banner | image_url: height: 800 }} 2x
+          "
+          type="image/webp"
+        >
+
+        <img
+          class="collection-products__banner-image"
+          src="{{ collection_banner | image_url: height: 800 }}"
+          srcset="{{ collection_banner | image_url: height: 1600 }} 2x"
+          alt="{{ section.settings.collection.image.alt }}"
+          loading="lazy"
+          width="{{ collection_banner.width }}"
+          height="{{ collection_banner.height }}"
+        >
+      </picture>
+    {% endif %}
+
+    <div class="collection-products__banner-info">
+      <h2 class="collection-products__banner-title">{{ section.settings.collection.title }}</h2>
+
+      {% assign count = section.settings.collection.all_products_count %}
+
+      {% if count > 0 %}
+        <span class="collection-products__banner-count">
+          {{ count }}
+          {% if count == 1 %}
+            product
+          {% else %}
+            products
+          {% endif %}
+        </span>
+      {% endif %}
+    </div>
+  </div>
+
+  {% assign section_products = section.settings.collection.products | default: collections.all.products %}
+
+  {% if section_products %}
+    <div class="collection-products__list swiper">
+      <div class="swiper-wrapper">
+        {% for product in section_products %}
+          <div class="collection-products__item swiper-slide">
+            <div class="collection-products__item-image-wrapper">
+              {% if product.tags.size > 0 %}
+                <div class="collection-products__item-tags">
+                  {% for tag in product.tags %}
+                    {% assign sale_class = tag | downcase %}
+                    <span class="collection-products__item-tag {% if sale_class contains 'sale' %}collection-products__item-tag--sale{% endif %}">
+                      {{ tag | capitalize }}
+                    </span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              <div class="collection-products__item-actions">
+                <button
+                  class="collection-products__item-action js-add-to-cart"
+                  aria-label="Add to wishlist"
+                  data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                  data-available-quantity="{{ product.variants.first.inventory_quantity }}"
+                ></button>
+              </div>
+
+              <a class="collection-products__item-link" href="{{ product.url }}">
+                {% if product.featured_image %}
+                  <picture class="collection-products__item-picture">
+                    <source
+                      media="(max-width: 420px)"
+                      srcset="
+                        {{ product.featured_image | image_url: width: 200 }} 1x,
+                        {{ product.featured_image | image_url: width: 400 }} 2x
+                      "
+                      type="image/webp"
+                    >
+
+                    <source
+                      media="(max-width: 991px)"
+                      srcset="
+                        {{ product.featured_image | image_url: width: 400 }} 1x,
+                        {{ product.featured_image | image_url: width: 800 }} 2x
+                      "
+                      type="image/webp"
+                    >
+
+                    <img
+                      class="collection-products__item-image"
+                      src="{{ product.featured_image | image_url: width: 800 }}"
+                      srcset="{{ product.featured_image | image_url: width: 1600 }} 2x"
+                      alt="{{ product.featured_image.alt | escape | default: product.title }}"
+                      loading="lazy"
+                      width="{{ product.featured_image.width }}"
+                      height="{{ product.featured_image.height }}"
+                    >
+                  </picture>
+                {% else %}
+                  <div class="collection-products__item-placeholder">
+                    {{ 'product-apparel-1' | placeholder_svg_tag: 'collection-products__item-placeholder-svg' }}
+                  </div>
+                {% endif %}
+              </a>
+            </div>
+
+            {% assign color_option = null %}
+
+            {% for option in product.options_with_values %}
+              {% if option.name == 'Color' or option.name == 'Colour' %}
+                {% assign color_option = option %}
+              {% endif %}
+            {% endfor %}
+
+            {% if color_option %}
+              <div class="collection-products__item-swatches js-color-watch">
+                {% for value in color_option.values %}
+                  <span class="collection-products__item-swatch js-color-watch-item {% if forloop.first %}is-active{% endif %}">
+                    <button
+                      type="button"
+                      aria-label="{{ value.name }}"
+                      style="background-color: {{ value.swatch.color | downcase }};"
+                    ></button>
+                  </span>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <a class="collection-products__item-link" href="{{ product.url }}">
+              <h3 class="collection-products__item-title">{{ product.title }}</h3>
+            </a>
+
+            <div class="collection-products__item-price-info">
+              <span class="collection-products__item-price">{{ product.price | money }}</span>
+
+              {% if product.compare_at_price %}
+                <span class="collection-products__item-price collection-products__item-price--old">
+                  {{ product.compare_at_price | money }}
+                </span>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+{{ 'cart-notification.css' | asset_url | stylesheet_tag }}
+{{ 'section-collection-products.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'section-collection-products.js' | asset_url }}" defer></script>
+<script src="{{ 'add-to-cart.js' | asset_url }}" defer></script>
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css"
+>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+
+{% schema %}
+{
+  "name": "Collection products",
+  "tag": "section",
+  "class": "collection-products js-collection-products",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "collection_custom_image",
+      "label": "Collection custom image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection products",
+      "category": "Custom Sections"
+    }
+  ]
+}
+{% endschema %}

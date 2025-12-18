@@ -15,11 +15,11 @@ const MODAL_CLASSES = {
 };
 
 const BESTSELLERS_SELECTORS = {
-  navItemsContainers: ".bestsellers__item",
-  navItems: ".bestsellers__item-link",
-  contentItems: ".bestsellers__panel",
-  addTocartBtn: ".bestsellers__panel-action.bestsellers__panel-action--wishlist",
-  block: ".bestsellers",
+  navItemsContainers: ".js-bestsellers-item",
+  navItems: ".js-bestsellers-item-link",
+  contentItems: ".js-bestsellers-panel",
+  addTocartBtn: ".js-add-to-cart",
+  block: ".js-bestsellers",
 };
 
 const BESTSELLERS_CLASSES = {
@@ -30,9 +30,6 @@ const BESTSELLERS_CLASSES = {
 // MODAL
 // =========================
 
-/**
- * @param {string} [title]
- */
 function CreateModal(title) {
   const modal = document.createElement("div");
   modal.classList.add(MODAL_CLASSES.modal);
@@ -66,9 +63,6 @@ function CreateModal(title) {
   });
 }
 
-/**
- * @param {HTMLDivElement} modal
- */
 function removeModal(modal) {
   modal.classList.remove(MODAL_CLASSES.show);
   document.body.style.overflow = "";
@@ -78,21 +72,14 @@ function removeModal(modal) {
   }, 300);
 }
 
-/**
- * @param {Element} section
- */
-
 function InitModals(section) {
   section.querySelectorAll(MODAL_SELECTORS.modalButtonTrigger).forEach((button) => {
-    // @ts-ignore
     if (!button.dataset.modalInit) {
       button.addEventListener("click", () => {
-        // @ts-ignore
         const title = button.dataset.title || "Product";
         CreateModal(title);
       });
 
-      // @ts-ignore
       button.dataset.modalInit = "true";
     }
   });
@@ -103,10 +90,6 @@ function InitModals(section) {
 // =========================
 
 class Bestsellers {
-  /**
-   * @param {Element} template
-   */
-
   constructor(template) {
     this.template = template;
     this.navItemsContainers = template.querySelectorAll(BESTSELLERS_SELECTORS.navItemsContainers);
@@ -117,17 +100,14 @@ class Bestsellers {
 
   bindEvents() {
     this.navItems.forEach((item, index) => {
-      // @ts-ignore
       if (!item.dataset.tabInit) {
         item.addEventListener("click", () => this.goToTab(index));
 
-        // @ts-ignore
         item.dataset.tabInit = "true";
       }
     });
   }
 
-  // @ts-ignore
   goToTab(index) {
     const currentNavItem = this.navItems[this.currentIndex]?.closest(BESTSELLERS_SELECTORS.navItemsContainers);
     const currentContent = this.contentItems[this.currentIndex];
@@ -155,125 +135,20 @@ class Bestsellers {
   }
 }
 
-function InitBestsellers() {
+function InitCollectionProducts() {
   document.querySelectorAll(BESTSELLERS_SELECTORS.block).forEach((template) => {
-    // @ts-ignore
     if (!template.dataset.bestsellersInit) {
       new Bestsellers(template).init();
-      // @ts-ignore
+
       template.dataset.bestsellersInit = "true";
     }
   });
 }
 
-function addToCart() {
-  const buttons = document.querySelectorAll(".js-add-to-cart");
+document.addEventListener("DOMContentLoaded", () => {
+  InitCollectionProducts();
+});
 
-  if (!buttons.length) return;
-
-  buttons.forEach((button) => {
-    button.addEventListener("click", async () => {
-      // @ts-ignore
-      const variantId = +button?.dataset.variantId;
-      // @ts-ignore
-      const availableQuantity = button?.dataset.availableQuantity ? +button.dataset.availableQuantity : null;
-
-      if (!variantId) {
-        console.error("Variant ID not found");
-        return;
-      }
-
-      if (availableQuantity !== null && availableQuantity < 1) {
-        showCartNotification("Product is sold out.", true);
-        return;
-      }
-
-      // @ts-ignore
-      const defaultlDisableValue = button.disabled;
-      // @ts-ignore
-      button.disabled = true;
-
-      try {
-        const response = await fetch(window.Shopify.routes.root + "cart/add.js", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id: variantId,
-            quantity: 1,
-          }),
-        });
-
-        if (response.ok) {
-          document.dispatchEvent(
-            new CustomEvent("cart:update", {
-              bubbles: true,
-              detail: {
-                data: {
-                  itemCount: 1,
-                  source: "product-form-component",
-                  variantId,
-                },
-              },
-            })
-          );
-
-          showCartNotification("Added to cart");
-        } else {
-          throw new Error("Failed to add items to cart");
-        }
-      } catch (error) {
-        showCartNotification("Error adding to cart", true);
-      } finally {
-        // @ts-ignore
-        button.disabled = defaultlDisableValue;
-      }
-    });
-  });
-}
-
-/**
- * @param {string | null} message
- */
-function showCartNotification(message, isError = false) {
-  const existingNotifications = document.querySelectorAll(".cart-notification");
-
-  existingNotifications.forEach((notification) => {
-    notification.remove();
-  });
-
-  const notification = document.createElement("div");
-  notification.className = "cart-notification";
-  notification.textContent = message;
-
-  notification.style.cssText = `background: ${isError ? "#ef4444" : "#10b981"}`;
-
-  const icon = document.createElement("span");
-  icon.innerHTML = isError ? "❌" : "✅";
-  notification.prepend(icon);
-
-  const progressBar = document.createElement("div");
-  progressBar.classList.add("progress-bar");
-
-  const progress = document.createElement("div");
-
-  progressBar.appendChild(progress);
-  notification.appendChild(progressBar);
-
-  document.body.appendChild(notification);
-
-  setTimeout(() => {
-    if (document.body.contains(notification)) {
-      notification.style.animation = "cartNotificationSlideOut 0.3s ease forwards";
-      setTimeout(() => notification.remove(), 300);
-    }
-  }, 1000);
-}
-
-InitBestsellers();
-addToCart();
-
-document.addEventListener("shopify:section:load", InitBestsellers);
-document.addEventListener("shopify:section:select", InitBestsellers);
-document.addEventListener("shopify:section:reorder", InitBestsellers);
+document.addEventListener("shopify:section:load", InitCollectionProducts);
+document.addEventListener("shopify:section:select", InitCollectionProducts);
+document.addEventListener("shopify:section:reorder", InitCollectionProducts);
