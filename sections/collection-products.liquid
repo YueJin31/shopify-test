@@ -1,12 +1,14 @@
 <div class="collection-products__wrapper">
   <div class="collection-products__banner">
-    {% if section.settings.collection_custom_image %}
-      {% assign collection_banner = section.settings.collection_custom_image %}
-    {% elsif section.settings.collection.image %}
-      {% assign collection_banner = section.settings.collection.image %}
-    {% else %}
-      {% assign collection_banner = 'collection-placeholder' %}
-    {% endif %}
+    {% liquid
+      if section.settings.collection_custom_image
+        assign collection_banner = section.settings.collection_custom_image
+      elsif section.settings.collection.image
+        assign collection_banner = section.settings.collection.image
+      else
+        assign collection_banner = 'collection-placeholder'
+      endif
+    %}
 
     {% if collection_banner == 'collection-placeholder' %}
       <div class="collection-products__banner-placeholder">
@@ -52,6 +54,7 @@
       {% if count > 0 %}
         <span class="collection-products__banner-count">
           {{ count }}
+
           {% if count == 1 %}
             product
           {% else %}
