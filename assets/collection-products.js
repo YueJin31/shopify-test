@@ -5,15 +5,12 @@ const COLLECTION_SELECTORS = {
   swiperContainer: ".swiper",
   swiperSlide: ".swiper-slide",
   swiperPagination: ".swiper-pagination",
-  swiperPrevBtn: "swiper-button-prev",
-  swiperNextBtn: "swiper-button-next",
+  swiperPrevBtn: ".swiper-button-prev",
+  swiperNextBtn: ".swiper-button-next",
 };
 
 const COLLECTION_CLASSES = {
   active: "is-active",
-  pagination: "swiper-pagination",
-  prev: "swiper-button-prev",
-  next: "swiper-button-next",
 };
 
 function initSwatches(block) {
@@ -32,46 +29,25 @@ function initSwatches(block) {
 
 function initSwiper(block) {
   const swiperEl = block.querySelector(COLLECTION_SELECTORS.swiperContainer);
+
   if (!swiperEl) return;
 
-  const slidesCount = swiperEl.querySelectorAll(COLLECTION_SELECTORS.swiperSlide).length;
-  const needControls = slidesCount > 3;
-
-  let paginationEl = null;
-  let prevEl = null;
-  let nextEl = null;
-
-  if (needControls) {
-    paginationEl = swiperEl.querySelector(COLLECTION_SELECTORS.swiperPagination) || document.createElement("div");
-    prevEl = swiperEl.querySelector(COLLECTION_SELECTORS.swiperPrevBtn) || document.createElement("div");
-    nextEl = swiperEl.querySelector(COLLECTION_SELECTORS.swiperNextBtn) || document.createElement("div");
-
-    paginationEl.className = COLLECTION_CLASSES.pagination;
-    prevEl.className = COLLECTION_CLASSES.prev;
-    nextEl.className = COLLECTION_CLASSES.next;
-
-    swiperEl.append(paginationEl, prevEl, nextEl);
-  }
+  const swiperPagination = swiperEl.querySelector(COLLECTION_SELECTORS.swiperPagination);
+  const swiperPrevBtn = swiperEl.querySelector(COLLECTION_SELECTORS.swiperPrevBtn);
+  const swiperNextBtn = swiperEl.querySelector(COLLECTION_SELECTORS.swiperNextBtn);
 
   new Swiper(swiperEl, {
     slidesPerView: 2,
     spaceBetween: 16,
-    loop: needControls,
-    watchOverflow: true,
-    pagination: needControls
-      ? {
-          el: paginationEl,
-          clickable: true,
-        }
-      : false,
-
-    navigation: needControls
-      ? {
-          prevEl,
-          nextEl,
-        }
-      : false,
-
+    loop: true,
+    pagination: {
+      el: swiperPagination,
+      clickable: true,
+    },
+    navigation: {
+      nextEl: swiperNextBtn,
+      prevEl: swiperPrevBtn,
+    },
     breakpoints: {
       1280: {
         slidesPerView: 3,

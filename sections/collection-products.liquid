@@ -170,14 +170,18 @@
           </div>
         {% endfor %}
       </div>
+
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
     </div>
   {% endif %}
 </div>
 
 {{ 'cart-notification.css' | asset_url | stylesheet_tag }}
-{{ 'section-collection-products.css' | asset_url | stylesheet_tag }}
+{{ 'collection-products.css' | asset_url | stylesheet_tag }}
 
-<script src="{{ 'section-collection-products.js' | asset_url }}" defer></script>
+<script src="{{ 'collection-products.js' | asset_url }}" defer></script>
 <script src="{{ 'add-to-cart.js' | asset_url }}" defer></script>
 
 <link

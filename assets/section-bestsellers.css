@@ -60,7 +60,6 @@
 
 .bestsellers__nav {
   width: 100%;
-  align-self: center;
 }
 
 @media screen and (min-width: 1023px) {
@@ -269,14 +268,10 @@
 }
 
 .bestsellers__panel-action:hover::after {
-  transform: translate(-50%, -50%) scale(1.2);
+  transform: scale(1.2);
 }
 
 .bestsellers__panel-action::after {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   content: "";
   width: 24px;
   height: 24px;
