@@ -20,7 +20,11 @@ function initSwatches(block) {
     const swatch = e.target.closest(COLLECTION_SELECTORS.swatchItem);
     if (!swatch) return;
 
-    swatches.querySelectorAll(COLLECTION_SELECTORS.swatchItem).forEach((item) => item.classList.remove(COLLECTION_CLASSES.active));
+    const activeSwatch = swatches.querySelector(`${COLLECTION_SELECTORS.swatchItem}.${COLLECTION_CLASSES.active}`);
+
+    if (activeSwatch) {
+      activeSwatch.classList.remove(COLLECTION_CLASSES.active);
+    }
 
     swatch.classList.add(COLLECTION_CLASSES.active);
   });
