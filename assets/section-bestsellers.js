@@ -1,7 +1,3 @@
-// =========================
-// SELECTORS & CLASSES
-// =========================
-
 const MODAL_SELECTORS = {
   modalButtonTrigger: ".js-create-modal",
 };
@@ -25,10 +21,6 @@ const BESTSELLERS_SELECTORS = {
 const BESTSELLERS_CLASSES = {
   active: "is-active",
 };
-
-// =========================
-// MODAL
-// =========================
 
 function CreateModal(title) {
   const modal = document.createElement("div");
@@ -84,10 +76,6 @@ function InitModals(section) {
     }
   });
 }
-
-// =========================
-// BESTSELLERS CLASS
-// =========================
 
 class Bestsellers {
   constructor(template) {
@@ -145,9 +133,7 @@ function InitBestsellers() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  InitBestsellers();
-});
+document.addEventListener("DOMContentLoaded", InitBestsellers);
 
 document.addEventListener("shopify:section:load", InitBestsellers);
 document.addEventListener("shopify:section:select", InitBestsellers);

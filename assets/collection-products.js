@@ -1,7 +1,7 @@
 const COLLECTION_SELECTORS = {
   block: ".js-collection-products",
-  swatchContainer: ".js-color-watch",
-  swatchItem: ".js-color-watch-item",
+  swatchContainer: ".js-color-swatch",
+  swatchItem: ".js-color-swatch-item",
   swiperContainer: ".swiper",
   swiperPagination: ".swiper-pagination",
   swiperPrevBtn: ".swiper-button-prev",
@@ -67,4 +67,7 @@ function InitCollection() {
 }
 
 document.addEventListener("DOMContentLoaded", InitCollection);
+
 document.addEventListener("shopify:section:load", InitCollection);
+document.addEventListener("shopify:section:select", InitCollection);
+document.addEventListener("shopify:section:reorder", InitCollection);

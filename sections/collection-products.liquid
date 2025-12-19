@@ -53,13 +53,7 @@
 
       {% if count > 0 %}
         <span class="collection-products__banner-count">
-          {{ count }}
-
-          {% if count == 1 %}
-            product
-          {% else %}
-            products
-          {% endif %}
+          {{ count }} product{% if count > 1 %}s{% endif %}
         </span>
       {% endif %}
     </div>
@@ -77,6 +71,7 @@
                 <div class="collection-products__item-tags">
                   {% for tag in product.tags %}
                     {% assign sale_class = tag | downcase %}
+
                     <span class="collection-products__item-tag {% if sale_class contains 'sale' %}collection-products__item-tag--sale{% endif %}">
                       {{ tag | capitalize }}
                     </span>
@@ -134,20 +129,22 @@
 
             {% assign color_option = null %}
 
-            {% for option in product.options_with_values %}
-              {% if option.name == 'Color' or option.name == 'Colour' %}
-                {% assign color_option = option %}
-              {% endif %}
-            {% endfor %}
+            {% liquid
+              for option in product.options_with_values
+                if option.name == 'Color' or option.name == 'Colour'
+                  assign color_option = option
+                endif
+              endfor
+            %}
 
             {% if color_option %}
-              <div class="collection-products__item-swatches js-color-watch">
+              <div class="collection-products__item-swatches js-color-swatch">
                 {% for value in color_option.values %}
-                  <span class="collection-products__item-swatch js-color-watch-item {% if forloop.first %}is-active{% endif %}">
+                  <span class="collection-products__item-swatch js-color-swatch-item {% if forloop.first %}is-active{% endif %}">
                     <button
                       type="button"
                       aria-label="{{ value.name }}"
-                      style="background-color: {{ value.swatch.color | downcase }};"
+                      style="background-color: {{ value.swatch.color | downcase }}"
                     ></button>
                   </span>
                 {% endfor %}

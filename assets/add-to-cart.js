@@ -1,5 +1,11 @@
 const CART_SELECTORS = {
   addToCartBtn: ".js-add-to-cart",
+  notificationContainer: ".cart-notification",
+};
+
+const CART_CLASSES = {
+  notification: "cart-notification",
+  progressBar: "progress-bar",
 };
 
 const CART_EVENTS = {
@@ -8,11 +14,12 @@ const CART_EVENTS = {
 
 function initAddToCart() {
   const buttons = document.querySelectorAll(CART_SELECTORS.addToCartBtn);
+
   if (!buttons.length) return;
 
   buttons.forEach((button) => {
-    const variantId = +button.dataset.variantId;
-    const availableQuantity = button.dataset.availableQuantity ? +button.dataset.availableQuantity : null;
+    const variantId = +button?.dataset.variantId;
+    const availableQuantity = button?.dataset.availableQuantity ? +button.dataset.availableQuantity : null;
 
     if (!variantId) {
       console.warn("Add to cart button without variantId", button);
@@ -74,10 +81,10 @@ function dispatchCartUpdate(variantId) {
 }
 
 function showCartNotification(message, isError = false) {
-  document.querySelectorAll(".cart-notification").forEach((el) => el.remove());
+  document.querySelectorAll(CART_SELECTORS.notificationContainer).forEach((el) => el.remove());
 
   const notification = document.createElement("div");
-  notification.className = "cart-notification";
+  notification.classList.add(CART_CLASSES.notification);
   notification.style.background = isError ? "#ef4444" : "#10b981";
 
   const icon = document.createElement("span");
@@ -87,7 +94,7 @@ function showCartNotification(message, isError = false) {
   text.textContent = message;
 
   const progressBar = document.createElement("div");
-  progressBar.className = "progress-bar";
+  progressBar.classList.add(CART_CLASSES.progressBar);
 
   const progress = document.createElement("div");
   progressBar.appendChild(progress);
@@ -98,7 +105,7 @@ function showCartNotification(message, isError = false) {
   setTimeout(() => {
     notification.style.animation = "cartNotificationSlideOut 0.3s ease forwards";
     setTimeout(() => notification.remove(), 300);
-  }, 1000);
+  }, 1300);
 }
 
 document.addEventListener("DOMContentLoaded", initAddToCart);

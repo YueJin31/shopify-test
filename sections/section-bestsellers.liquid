@@ -19,7 +19,7 @@
     {% if blocks_size > 0 %}
       <div class="bestsellers__items">
         {% for block in section.blocks %}
-          {% assign collection_title = block.settings['custom-collection'] | default: block.settings.collection.title %}
+          {% assign collection_title = block.settings.custom_collection | default: block.settings.collection.title %}
 
           {% if collection_title != blank %}
             <div class="bestsellers__item js-bestsellers-item">
@@ -36,11 +36,11 @@
   {% if blocks_size > 0 %}
     <div class="bestsellers__content">
       {% for block in section.blocks %}
-        {% assign collection_title = block.settings['custom-collection'] | default: block.settings.collection.title %}
+        {% assign collection_title = block.settings.custom_collection | default: block.settings.collection.title %}
 
         {% liquid
           assign collection_product = block.settings.collection.products.first | default: collections.all.products.first
-          assign product = block.settings['custom-product'] | default: collection_product
+          assign product = block.settings.custom_product | default: collection_product
         %}
 
         {% if product and collection_title %}
@@ -113,6 +113,8 @@
                       width="{{ product_image.width }}"
                       height="{{ product_image.height }}"
                     >
+                  {% else %}
+                    {{ 'collection-apparel-1' | placeholder_svg_tag: 'bestsellers__panel-image' }}
                   {% endif %}
                 </picture>
 
@@ -178,12 +180,12 @@
         },
         {
           "type": "text",
-          "id": "custom-collection",
+          "id": "custom_collection",
           "label": "Custom collection"
         },
         {
           "type": "product",
-          "id": "custom-product",
+          "id": "custom_product",
           "label": "Custom product"
         }
       ]
