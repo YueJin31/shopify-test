@@ -65,7 +65,7 @@
     <div class="collection-products__list swiper">
       <div class="swiper-wrapper">
         {% for product in collection_products %}
-          <div class="collection-products__item swiper-slide">
+          <div class="collection-products__item swiper-slide js-collection-products-item">
             <div class="collection-products__item-image-wrapper">
               {% if product.tags.size > 0 %}
                 <div class="collection-products__item-tags">
@@ -92,6 +92,7 @@
                 {% if product.featured_image %}
                   <picture class="collection-products__item-picture">
                     <source
+                      class="collection-products__item-image js-collection-products-item-image"
                       media="(max-width: 420px)"
                       srcset="
                         {{ product.featured_image | image_url: width: 200 }} 1x,
@@ -101,6 +102,7 @@
                     >
 
                     <source
+                      class="collection-products__item-image js-collection-products-item-image"
                       media="(max-width: 991px)"
                       srcset="
                         {{ product.featured_image | image_url: width: 400 }} 1x,
@@ -110,7 +112,7 @@
                     >
 
                     <img
-                      class="collection-products__item-image"
+                      class="collection-products__item-image js-collection-products-item-image"
                       src="{{ product.featured_image | image_url: width: 800 }}"
                       srcset="{{ product.featured_image | image_url: width: 1600 }} 2x"
                       alt="{{ product.featured_image.alt | escape | default: product.title }}"
@@ -127,8 +129,6 @@
               </a>
             </div>
 
-            {% assign color_option = null %}
-
             {% liquid
               for option in product.options_with_values
                 if option.name == 'Color' or option.name == 'Colour'
@@ -139,14 +139,30 @@
 
             {% if color_option %}
               <div class="collection-products__item-swatches js-color-swatch">
-                {% for value in color_option.values %}
-                  <span class="collection-products__item-swatch js-color-swatch-item {% if forloop.first %}is-active{% endif %}">
+                {% for variant in product.variants %}
+                  {% assign variant_color = variant.option1 %}
+                  {% assign color_hex = null %}
+
+                  {% for value in color_option.values %}
+                    {% if value == variant_color and value.swatch %}
+                      {% assign color_hex = value.swatch.color %}
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if variant.featured_image and color_hex %}
                     <button
+                      class="collection-products__item-swatch js-color-swatch-item {% if forloop.first %}is-active{% endif %}"
                       type="button"
-                      aria-label="{{ value.name }}"
-                      style="background-color: {{ value.swatch.color | downcase }}"
-                    ></button>
-                  </span>
+                      aria-label="{{ variant_color }}"
+                      data-variant-id="{{ variant.id }}"
+                      data-variant-quantity="{{ variant.inventory_quantity }}"
+                      data-variant-price="{{ variant.price | money }}"
+                      data-variant-compare-price="{{ variant.compare_at_price | money }}"
+                      data-variant-image="{{ variant.featured_image | image_url: width: 800 }}"
+                    >
+                      <span style="background-color: {{ color_hex }}"></span>
+                    </button>
+                  {% endif %}
                 {% endfor %}
               </div>
             {% endif %}
@@ -155,12 +171,22 @@
               <h3 class="collection-products__item-title">{{ product.title }}</h3>
             </a>
 
-            <div class="collection-products__item-price-info">
-              <span class="collection-products__item-price">{{ product.price | money }}</span>
+            {% liquid
+              assign price_source = product
 
-              {% if product.compare_at_price %}
-                <span class="collection-products__item-price collection-products__item-price--old">
-                  {{ product.compare_at_price | money }}
+              if color_option
+                assign price_source = product.variants.first
+              endif
+            %}
+
+            <div class="collection-products__item-price-info">
+              <span class="collection-products__item-price js-collection-products-item-price">
+                {{ price_source.price | money }}
+              </span>
+
+              {% if price_source %}
+                <span class="collection-products__item-price collection-products__item-price--old js-collection-products-compare-price">
+                  {{ price_source.compare_at_price | money }}
                 </span>
               {% endif %}
             </div>
