@@ -40,7 +40,7 @@
 
 .collection-products__banner-picture,
 .collection-products__banner-placeholder {
-  aspect-ratio: 400 / 582;
+  aspect-ratio: 343 / 429;
   width: 100%;
   overflow: hidden;
   border-radius: 16px;
@@ -52,6 +52,7 @@
   .collection-products__banner-placeholder {
     min-width: 400px;
     max-width: 400px;
+    aspect-ratio: 400 / 582;
   }
 }
 
@@ -96,7 +97,7 @@
 .collection-products__item-swatches {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 4px;
   margin-bottom: 16px;
 }
 
@@ -107,11 +108,11 @@
 }
 
 .collection-products__item-swatch {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   border-radius: 4px;
   display: flex;
-  padding: 3px;
+  padding: 0;
   align-items: center;
   justify-content: center;
   border: 1px solid transparent;
@@ -123,9 +124,22 @@
   }
 
   span {
+    width: 16px;
+    height: 16px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+}
+
+@media screen and (min-width: 1023px) {
+  .collection-products__item-swatch {
+    width: 20px;
+    height: 20px;
+
+    span {
     width: 12px;
     height: 12px;
-    border-radius: 2px;
+  }
   }
 }
 
@@ -137,6 +151,7 @@
 
 .collection-products__item-price-info {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-top: 16px;
 }
@@ -150,6 +165,7 @@
 @media screen and (max-width: 1023px) {
   .collection-products__item-price {
     font-size: 14px;
+    color: var(--black);
   }
 }
 
@@ -185,6 +201,7 @@
 @media screen and (max-width: 1023px) {
   .collection-products__item-tags {
     left: 8px;
+    max-width: 65%;
   }
 }
 
@@ -193,6 +210,7 @@
   font-weight: 500;
   font-size: 12px;
   border-radius: 8px;
+  line-height: 1.2;
   border: 1px solid var(--light-gray);
   background: var(--white);
   text-align: center;
@@ -307,10 +325,16 @@
 
 .swiper-pagination {
   position: relative !important;
-  margin-top: 32px;
+  margin-top: 42px;
   display: flex;
   gap: 16px;
   justify-content: center;
+}
+
+@media screen and (min-width: 1023px) {
+ .swiper-pagination {
+     margin-top: 32px;
+  }
 }
 
 .swiper-pagination-bullet {
