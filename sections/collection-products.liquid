@@ -184,7 +184,7 @@
                 {{ price_source.price | money }}
               </span>
 
-              {% if price_source %}
+              {% if price_source.compare_at_price %}
                 <span class="collection-products__item-price collection-products__item-price--old js-collection-products-compare-price">
                   {{ price_source.compare_at_price | money }}
                 </span>

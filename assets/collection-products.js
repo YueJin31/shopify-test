@@ -27,6 +27,7 @@ function initSwatches(block) {
 
     swatches.addEventListener("click", (e) => {
       const swatch = e.target.closest(COLLECTION_SELECTORS.swatchItem);
+
       if (!swatch) return;
 
       setActiveSwatch(swatches, swatch);

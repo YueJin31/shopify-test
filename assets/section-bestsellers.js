@@ -15,7 +15,7 @@ const BESTSELLERS_SELECTORS = {
   navItems: ".js-bestsellers-item-link",
   contentItems: ".js-bestsellers-panel",
   addTocartBtn: ".js-add-to-cart",
-  block: ".js-bestsellers",
+  section: ".js-bestsellers",
 };
 
 const BESTSELLERS_CLASSES = {
@@ -124,7 +124,7 @@ class Bestsellers {
 }
 
 function initBestsellers() {
-  document.querySelectorAll(BESTSELLERS_SELECTORS.block).forEach((template) => {
+  document.querySelectorAll(BESTSELLERS_SELECTORS.section).forEach((template) => {
     if (!template.dataset.bestsellersInit) {
       new Bestsellers(template).init();
 

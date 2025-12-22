@@ -220,6 +220,7 @@
   background: var(--red);
   color: var(--white);
   border: none;
+  padding: 4px 11px;
 }
 
 .collection-products__item-actions {
