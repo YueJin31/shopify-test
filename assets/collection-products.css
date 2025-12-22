@@ -1,6 +1,6 @@
 .collection-products {
   padding: 0 var(--content-padding);
-  max-width: calc(var(--content-width) + var(--content-padding) * 2);
+  max-width: calc(var(--content-width-wide) + var(--content-padding) * 2);
   margin: 0 auto;
 
   + .collection-products,

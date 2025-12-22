@@ -1,4 +1,8 @@
 .bestsellers {
+  padding: 0 var(--content-padding);
+  max-width: calc(var(--content-width) + var(--content-padding) * 2);
+  margin: 0 auto;
+
   + .bestsellers,
   &:first-of-type {
     margin-top: 100px;
