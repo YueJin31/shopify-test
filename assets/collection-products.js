@@ -1,5 +1,5 @@
 const COLLECTION_SELECTORS = {
-  block: ".js-collection-products",
+  section: ".js-collection-products",
   productImage: ".js-collection-products-item-image",
   productItem: ".js-collection-products-item",
   productPrice: ".js-collection-products-item-price",
@@ -19,36 +19,19 @@ const COLLECTION_CLASSES = {
 
 function initSwatches(block) {
   const productItems = block.querySelectorAll(COLLECTION_SELECTORS.productItem);
-  if (!productItems) return;
+  if (!productItems.length) return;
 
   productItems.forEach((productItem) => {
     const swatches = productItem.querySelector(COLLECTION_SELECTORS.swatchContainer);
-
     if (!swatches) return;
-
-    const productImages = productItem.querySelectorAll(COLLECTION_SELECTORS.productImage);
-    const productPrice = productItem.querySelector(COLLECTION_SELECTORS.productPrice);
-    const productComparePrice = productItem.querySelector(COLLECTION_SELECTORS.productComparePrice);
-    const productAddToCartBtn = productItem.querySelector(COLLECTION_SELECTORS.productAddToCart);
 
     swatches.addEventListener("click", (e) => {
       const swatch = e.target.closest(COLLECTION_SELECTORS.swatchItem);
       if (!swatch) return;
 
-      const { variantImage, variantPrice, variantComparePrice, variantId, variantQuantity } = swatch.dataset;
-
       setActiveSwatch(swatches, swatch);
-      updateProductUI({
-        productImages,
-        productPrice,
-        productComparePrice,
-        productAddToCartBtn,
-        variantImage,
-        variantPrice,
-        variantComparePrice,
-        variantId,
-        variantQuantity,
-      });
+
+      updateProductUI(productItem, swatch.dataset);
     });
   });
 }
@@ -60,20 +43,45 @@ function setActiveSwatch(container, current) {
   current.classList.add(COLLECTION_CLASSES.active);
 }
 
-function updateProductUI({ productImages, productPrice, productComparePrice, productAddToCartBtn, variantImage, variantPrice, variantComparePrice, variantId, variantQuantity }) {
+function updateProductUI(productItem, { variantImage, variantPrice, variantComparePrice, variantId, variantQuantity }) {
+  const productImages = productItem.querySelectorAll(COLLECTION_SELECTORS.productImage);
+  const productPrice = productItem.querySelector(COLLECTION_SELECTORS.productPrice);
+  const productComparePrice = productItem.querySelector(COLLECTION_SELECTORS.productComparePrice);
+  const productAddToCartBtn = productItem.querySelector(COLLECTION_SELECTORS.productAddToCart);
+
   if (variantImage) {
-    productImages.forEach((productImage) => {
-      productImage.src = variantImage;
-      productImage.srcset = `${variantImage} 1x, ${variantImage} 2x`;
+    productImages.forEach((img) => {
+      img.src = variantImage;
+      img.srcset = `${variantImage} 1x, ${variantImage} 2x`;
     });
   }
 
-  if (variantPrice) productPrice.textContent = variantPrice;
-  if (variantComparePrice) productComparePrice.textContent = variantComparePrice;
+  if (variantPrice && productPrice) {
+    productPrice.textContent = variantPrice;
+  }
 
-  productAddToCartBtn.dataset.variantId = variantId;
-  productAddToCartBtn.dataset.availableQuantity = variantQuantity;
-  productAddToCartBtn.disabled = Number(variantQuantity) < 1;
+  const hasVariantCompare = !!variantComparePrice;
+  const hasCompareEl = !!productComparePrice;
+
+  if (hasVariantCompare) {
+    if (hasCompareEl) {
+      productComparePrice.textContent = variantComparePrice;
+    } else {
+      const comparePrice = document.createElement("span");
+      comparePrice.className = "collection-products__item-price collection-products__item-price--old js-collection-products-compare-price";
+      comparePrice.textContent = variantComparePrice;
+
+      productPrice.after(comparePrice);
+    }
+  } else if (hasCompareEl) {
+    productComparePrice.remove();
+  }
+
+  if (productAddToCartBtn) {
+    productAddToCartBtn.dataset.variantId = variantId;
+    productAddToCartBtn.dataset.availableQuantity = variantQuantity;
+    productAddToCartBtn.disabled = Number(variantQuantity) < 1;
+  }
 }
 
 function initSwiper(block) {
@@ -101,7 +109,7 @@ function initSwiper(block) {
 }
 
 function initCollection() {
-  document.querySelectorAll(COLLECTION_SELECTORS.block).forEach((block) => {
+  document.querySelectorAll(COLLECTION_SELECTORS.section).forEach((block) => {
     initSwatches(block);
     initSwiper(block);
   });
