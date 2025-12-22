@@ -80,7 +80,7 @@ function updateProductUI(productItem, { variantImage, variantPrice, variantCompa
   if (productAddToCartBtn) {
     productAddToCartBtn.dataset.variantId = variantId;
     productAddToCartBtn.dataset.availableQuantity = variantQuantity;
-    productAddToCartBtn.disabled = Number(variantQuantity) < 1;
+    productAddToCartBtn.disabled = +variantQuantity < 1;
   }
 }
 
