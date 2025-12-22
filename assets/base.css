@@ -1,0 +1,12 @@
+:root {
+  --black: #000;
+  --mine-shaft: #292929;
+  --white: #fff;
+  --red: #e41616;
+  --gray: #535353;
+  --light-gray: #dcdcdc;
+  --medium-gray: #9d9d9d;
+
+  --content-width: 1680px;
+  --content-padding: 16px;
+}

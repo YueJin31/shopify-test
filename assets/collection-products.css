@@ -1,8 +1,3 @@
-:root {
-  --content-width: 1680px;
-  --content-padding: 16px;
-}
-
 .collection-products {
   padding: 0 var(--content-padding);
   max-width: calc(var(--content-width) + var(--content-padding) * 2);
@@ -38,7 +33,7 @@
   &:has(.collection-products__banner-placeholder) {
     .collection-products__banner-title,
     .collection-products__banner-count {
-      color: #000;
+      color: var(--black);
     }
   }
 }
@@ -68,7 +63,7 @@
 }
 
 .collection-products__banner-info {
-  color: #fff;
+  color: var(--white);
   position: absolute;
   bottom: 0;
   padding: 24px;
@@ -121,10 +116,10 @@
   justify-content: center;
   border: 1px solid transparent;
   cursor: pointer;
-  background: transparent;
+  background: none;
 
   &.is-active {
-    border-color: #000;
+    border-color: var(--black);
   }
 
   span {
@@ -137,7 +132,7 @@
 .collection-products__item-title {
   font-size: 16px;
   font-weight: 400;
-  color: #000;
+  color: var(--black);
 }
 
 .collection-products__item-price-info {
@@ -148,7 +143,7 @@
 
 .collection-products__item-price {
   font-size: 16px;
-  color: #e41616;
+  color: var(--red);
   font-weight: 500;
 }
 
@@ -160,7 +155,7 @@
 
 .collection-products__item-price--old {
   text-decoration: line-through;
-  color: #9d9d9d;
+  color: var(--medium-gray);
   font-weight: 400;
 }
 
@@ -181,7 +176,7 @@
 .collection-products__item-tags {
   left: 16px;
   gap: 4px;
-  color: #000;
+  color: var(--black);
   display: flex;
   flex-direction: column;
   z-index: 1;
@@ -198,15 +193,15 @@
   font-weight: 500;
   font-size: 12px;
   border-radius: 8px;
-  border: 1px solid #dcdcdc;
-  background: #fff;
+  border: 1px solid var(--light-gray);
+  background: var(--white);
   text-align: center;
 }
 
 .collection-products__item-tag--sale {
-  background: #e41616;
+  background: var(--red);
+  color: var(--white);
   border: none;
-  color: #fff;
 }
 
 .collection-products__item-actions {
@@ -233,8 +228,8 @@
   width: 40px;
   height: 40px;
   border-radius: 8px;
-  border: 1px solid #dcdcdc;
-  background: #fff;
+  border: 1px solid var(--light-gray);
+  background: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -326,7 +321,7 @@
   &.swiper-pagination-bullet-active {
     width: 24px;
     border-radius: 16px;
-    background: #000;
+    background: var(--black);
   }
 }
 
@@ -337,8 +332,8 @@
   gap: 10px;
   width: 48px !important;
   height: 64px !important;
-  background: #fff;
-  border: 1px solid #dcdcdc;
+  background: var(--white);
+  border: 1px solid var(--light-gray);
   border-radius: 12px;
 
   svg {
