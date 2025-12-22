@@ -62,9 +62,9 @@ function setActiveSwatch(container, current) {
 
 function updateProductUI({ productImages, productPrice, productComparePrice, productAddToCartBtn, variantImage, variantPrice, variantComparePrice, variantId, variantQuantity }) {
   if (variantImage) {
-    productImages.forEach((img) => {
-      img.src = variantImage;
-      img.srcset = `${variantImage} 1x, ${variantImage} 2x`;
+    productImages.forEach((productImage) => {
+      productImage.src = variantImage;
+      productImage.srcset = `${variantImage} 1x, ${variantImage} 2x`;
     });
   }
 

@@ -22,7 +22,7 @@ const BESTSELLERS_CLASSES = {
   active: "is-active",
 };
 
-function CreateModal(title) {
+function createModal(title) {
   const modal = document.createElement("div");
   modal.classList.add(MODAL_CLASSES.modal);
 
@@ -64,12 +64,12 @@ function removeModal(modal) {
   }, 300);
 }
 
-function InitModals(section) {
+function initModals(section) {
   section.querySelectorAll(MODAL_SELECTORS.modalButtonTrigger).forEach((button) => {
     if (!button.dataset.modalInit) {
       button.addEventListener("click", () => {
         const title = button.dataset.title || "Product";
-        CreateModal(title);
+        createModal(title);
       });
 
       button.dataset.modalInit = "true";
@@ -119,11 +119,11 @@ class Bestsellers {
   init() {
     this.initActiveTab();
     this.bindEvents();
-    InitModals(this.template);
+    initModals(this.template);
   }
 }
 
-function InitBestsellers() {
+function initBestsellers() {
   document.querySelectorAll(BESTSELLERS_SELECTORS.block).forEach((template) => {
     if (!template.dataset.bestsellersInit) {
       new Bestsellers(template).init();
@@ -133,8 +133,7 @@ function InitBestsellers() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", InitBestsellers);
-
-document.addEventListener("shopify:section:load", InitBestsellers);
-document.addEventListener("shopify:section:select", InitBestsellers);
-document.addEventListener("shopify:section:reorder", InitBestsellers);
+document.addEventListener("DOMContentLoaded", initBestsellers);
+["shopify:section:load", "shopify:section:select", "shopify:section:reorder"].forEach((event) => {
+  document.addEventListener(event, initBestsellers);
+});
