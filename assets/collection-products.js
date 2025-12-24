@@ -1,6 +1,7 @@
 const COLLECTION_SELECTORS = {
   section: ".js-collection-products",
   productImage: ".js-collection-products-item-image",
+  productPicture: ".js-collection-products-item-picture",
   productItem: ".js-collection-products-item",
   productPrice: ".js-collection-products-item-price",
   productComparePrice: ".js-collection-products-compare-price",
@@ -41,7 +42,7 @@ function setActiveSwatch(container, current) {
 }
 
 function updateProductUI(productItem, { variantImage, variantPrice, variantComparePrice, variantId, variantQuantity }) {
-  const productPicture = productItem.querySelector(".collection-products__item-picture");
+  const productPicture = productItem.querySelector(COLLECTION_SELECTORS.productPicture);
   const productImg = productPicture?.querySelector("img");
 
   if (variantImage && productPicture && productImg) {

@@ -102,7 +102,7 @@
 
                 <a class="collection-products__item-link" href="{{ product.url }}">
                   {% if product.featured_image %}
-                    <picture class="collection-products__item-picture">
+                    <picture class="collection-products__item-picture js-collection-products-item-picture">
                       <source
                         class="collection-products__item-image js-collection-products-item-image"
                         media="(max-width: 420px)"
@@ -149,14 +149,6 @@
               {% if color_option %}
                 <div class="collection-products__item-swatches js-color-swatch">
                   {% for value in color_option.values %}
-                    {% liquid
-                      if value.variant.image
-                        assign variant_image = value.variant.image | image_url
-                      else
-                        assign variant_image = ''
-                      endif
-                    %}
-
                     <button
                       class="collection-products__item-swatch js-color-swatch-item {% if forloop.first %}is-active{% endif %}"
                       type="button"
@@ -165,7 +157,9 @@
                       data-variant-price="{{ value.variant.price | money }}"
                       data-variant-quantity="{{ value.variant.inventory_quantity }}"
                       data-variant-compare-price="{{ value.variant.compare_at_price | money }}"
-                      data-variant-image="{{ variant_image }}"
+                      {% if value.variant.image %}
+                        data-variant-image="{{ value.variant.featured_image | image_url }}"
+                      {% endif %}
                     >
                       <span
                         class="collection-products__item-swatch-color"
