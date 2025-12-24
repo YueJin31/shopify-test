@@ -1,5 +1,5 @@
-{{ 'cart-notification.css' | asset_url | stylesheet_tag }}
 {{ 'collection-products.css' | asset_url | stylesheet_tag }}
+{{ 'cart-notification.css' | asset_url | stylesheet_tag }}
 
 {% liquid
   assign collection = section.settings.collection
@@ -144,7 +144,7 @@
                 </a>
               </div>
 
-              {% assign color_option = product.options_by_name.Color | default: product.options_by_name.Colour %}``
+              {% assign color_option = product.options_by_name.Color | default: product.options_by_name.Colour %}
 
               {% if color_option %}
                 <div class="collection-products__item-swatches js-color-swatch">
