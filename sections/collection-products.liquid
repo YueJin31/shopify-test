@@ -158,7 +158,7 @@
                       data-variant-quantity="{{ value.variant.inventory_quantity }}"
                       data-variant-compare-price="{{ value.variant.compare_at_price | money }}"
                       {% if value.variant.image %}
-                        data-variant-image="{{ value.variant.featured_image | image_url }}"
+                        data-variant-image="{{ value.variant.image | image_url }}"
                       {% endif %}
                     >
                       <span
