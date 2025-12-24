@@ -18,22 +18,18 @@ const COLLECTION_CLASSES = {
 };
 
 function initSwatches(block) {
-  const productItems = block.querySelectorAll(COLLECTION_SELECTORS.productItem);
-  if (!productItems.length) return;
+  block.addEventListener("click", (e) => {
+    const swatch = e.target.closest(COLLECTION_SELECTORS.swatchItem);
+    if (!swatch) return;
 
-  productItems.forEach((productItem) => {
+    const productItem = swatch.closest(COLLECTION_SELECTORS.productItem);
+    if (!productItem) return;
+
     const swatches = productItem.querySelector(COLLECTION_SELECTORS.swatchContainer);
     if (!swatches) return;
 
-    swatches.addEventListener("click", (e) => {
-      const swatch = e.target.closest(COLLECTION_SELECTORS.swatchItem);
-
-      if (!swatch) return;
-
-      setActiveSwatch(swatches, swatch);
-
-      updateProductUI(productItem, swatch.dataset);
-    });
+    setActiveSwatch(swatches, swatch);
+    updateProductUI(productItem, swatch.dataset);
   });
 }
 
@@ -45,38 +41,54 @@ function setActiveSwatch(container, current) {
 }
 
 function updateProductUI(productItem, { variantImage, variantPrice, variantComparePrice, variantId, variantQuantity }) {
-  const productImages = productItem.querySelectorAll(COLLECTION_SELECTORS.productImage);
-  const productPrice = productItem.querySelector(COLLECTION_SELECTORS.productPrice);
+  const productPicture = productItem.querySelector(".collection-products__item-picture");
+  const productImg = productPicture?.querySelector("img");
+
+  if (variantImage && productPicture && productImg) {
+    const widths = {
+      small: 200,
+      medium: 300,
+      large: 450,
+    };
+
+    const smallSource = productPicture.querySelector('source[media="(max-width: 420px)"]');
+    if (smallSource) {
+      smallSource.srcset = `${variantImage}&width=${widths.small} 1x, ${variantImage}&width=${widths.small * 2} 2x`;
+    }
+
+    const mediumSource = productPicture.querySelector('source[media="(max-width: 991px)"]');
+    if (mediumSource) {
+      mediumSource.srcset = `${variantImage}&width=${widths.medium} 1x, ${variantImage}&width=${widths.medium * 2} 2x`;
+    }
+
+    productImg.src = `${variantImage}&width=${widths.large}`;
+    productImg.srcset = `${variantImage}&width=${widths.large} 1x, ${variantImage}&width=${widths.large * 2} 2x`;
+    productImg.width = widths.large;
+    productImg.height = widths.large;
+  }
+
+  const productPriceElement = productItem.querySelector(COLLECTION_SELECTORS.productPrice);
+  if (variantPrice && productPriceElement) {
+    productPriceElement.textContent = variantPrice;
+  }
+
   const productComparePrice = productItem.querySelector(COLLECTION_SELECTORS.productComparePrice);
-  const productAddToCartBtn = productItem.querySelector(COLLECTION_SELECTORS.productAddToCart);
-
-  if (variantImage) {
-    productImages.forEach((img) => {
-      img.src = variantImage;
-      img.srcset = `${variantImage} 1x, ${variantImage} 2x`;
-    });
-  }
-
-  if (variantPrice && productPrice) {
-    productPrice.textContent = variantPrice;
-  }
-
   const hasVariantCompare = !!variantComparePrice;
-  const hasCompareEl = !!productComparePrice;
 
   if (hasVariantCompare) {
-    if (hasCompareEl) {
+    if (productComparePrice) {
       productComparePrice.textContent = variantComparePrice;
     } else {
       const comparePrice = document.createElement("span");
       comparePrice.className = "collection-products__item-price collection-products__item-price--old js-collection-products-compare-price";
       comparePrice.textContent = variantComparePrice;
-
-      productPrice.after(comparePrice);
+      productPriceElement.after(comparePrice);
     }
-  } else if (hasCompareEl) {
+  } else if (productComparePrice) {
     productComparePrice.remove();
   }
+
+  const productAddToCartBtn = productItem.querySelector(COLLECTION_SELECTORS.productAddToCart);
 
   if (productAddToCartBtn) {
     productAddToCartBtn.dataset.variantId = variantId;
@@ -89,6 +101,8 @@ function initSwiper(block) {
   const swiperEl = block.querySelector(COLLECTION_SELECTORS.swiperContainer);
   if (!swiperEl) return;
 
+  const slidesCount = swiperEl.querySelectorAll(COLLECTION_SELECTORS.productItem).length;
+
   new Swiper(swiperEl, {
     slidesPerView: 2,
     spaceBetween: 16,
@@ -96,6 +110,7 @@ function initSwiper(block) {
     pagination: {
       el: swiperEl.querySelector(COLLECTION_SELECTORS.swiperPagination),
       clickable: true,
+      dynamicBullets: slidesCount > 17,
     },
     navigation: {
       nextEl: swiperEl.querySelector(COLLECTION_SELECTORS.swiperNextBtn),

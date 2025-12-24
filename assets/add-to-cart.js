@@ -13,38 +13,18 @@ const CART_EVENTS = {
 };
 
 function initAddToCart() {
-  const buttons = document.querySelectorAll(CART_SELECTORS.addToCartBtn);
+  document.addEventListener("click", (e) => {
+    const button = e.target.closest(CART_SELECTORS.addToCartBtn);
 
-  if (!buttons.length) return;
+    if (!button) return;
 
-  buttons.forEach((button) => {
-    isProductAvalible(button);
-
-    button.addEventListener("click", () => handleAddToCart(button));
+    handleAddToCart(button);
   });
 }
 
-function isProductAvalible(button) {
-  const variantId = +button?.dataset.variantId;
-  const availableQuantity = button?.dataset.availableQuantity ? +button.dataset.availableQuantity : null;
-
-  if (!variantId) {
-    console.warn("Add to cart button without variantId", button);
-    return;
-  }
-
-  if (availableQuantity !== null && availableQuantity < 1) {
-    button.disabled = true;
-    return;
-  }
-
-  return variantId;
-}
-
 async function handleAddToCart(button) {
-  const variantId = isProductAvalible(button);
+  const variantId = button.dataset.variantId;
 
-  const wasDisabled = button.disabled;
   button.disabled = true;
 
   try {
@@ -55,7 +35,7 @@ async function handleAddToCart(button) {
   } catch (error) {
     showCartNotification(error.message, true);
   } finally {
-    button.disabled = wasDisabled;
+    button.disabled = false;
   }
 }
 
