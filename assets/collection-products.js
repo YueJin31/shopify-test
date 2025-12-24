@@ -106,7 +106,7 @@ function initSwiper(block) {
   new Swiper(swiperEl, {
     slidesPerView: 2,
     spaceBetween: 16,
-    loop: true,
+    loop: slidesCount > 3,
     pagination: {
       el: swiperEl.querySelector(COLLECTION_SELECTORS.swiperPagination),
       clickable: true,
