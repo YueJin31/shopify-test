@@ -132,8 +132,8 @@
                         "
                         alt="{{ product.featured_image.alt | escape | default: product.title }}"
                         loading="lazy"
-                        width="410"
-                        height="410"
+                        width="411"
+                        height="411"
                       >
                     </picture>
                   {% else %}
@@ -178,7 +178,7 @@
                 assign price_source = product
 
                 if color_option
-                  assign price_source = product.variants.first
+                  assign price_source = product.selected_or_first_available_variant
                 endif
               %}
 

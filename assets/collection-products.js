@@ -64,8 +64,8 @@ function updateProductUI(productItem, { variantImage, variantPrice, variantCompa
 
     productImg.src = `${variantImage}&width=${widths.large}`;
     productImg.srcset = `${variantImage}&width=${widths.large} 1x, ${variantImage}&width=${widths.large * 2} 2x`;
-    productImg.width = widths.large;
-    productImg.height = widths.large;
+    productImg.width = productImg.width;
+    productImg.height = productImg.height;
   }
 
   const productPriceElement = productItem.querySelector(COLLECTION_SELECTORS.productPrice);
