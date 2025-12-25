@@ -8,10 +8,6 @@
     margin-top: 100px;
   }
 
-  --focus-color: var(--black);
-  --focus-width: 2px;
-  --focus-offset: 2px;
-  --focus-radius: 0;
   --focus-opacity: 1;
 }
 
@@ -235,6 +231,8 @@
 .collection-products__item-actions {
   right: 16px;
   gap: 8px;
+  display: flex;
+  flex-direction: column;
 }
 
 @media screen and (max-width: 1023px) {
@@ -421,8 +419,8 @@
 
 .collection-products a:focus-visible,
 .collection-products button:focus-visible {
-  outline: var(--focus-width) solid var(--focus-color);
-  outline-offset: var(--focus-offset);
+  outline: 2px solid var(--black);
+  outline-offset: 2px;
   opacity: var(--focus-opacity);
 }
 
