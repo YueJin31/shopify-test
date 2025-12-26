@@ -112,7 +112,7 @@
                           class="collection-products__item-picture js-collection-products-item-picture {% unless forloop.first %}hidden{% endunless %}"
                           data-variant-id="{{ value.variant.id }}"
                         >
-                          {% render 'collection-product-picture', image: variant_image, product: product %}
+                          {% render 'collection-product-picture', image: variant_image %}
                         </picture>
                       {% else %}
                         <div
@@ -126,7 +126,7 @@
 
                   {% elsif product.featured_image %}
                     <picture class="collection-products__item-picture js-collection-products-item-picture">
-                      {% render 'collection-product-picture', image: product.featured_image, product: product %}
+                      {% render 'collection-product-picture', image: product.featured_image %}
                     </picture>
 
                   {% else %}

@@ -25,7 +25,7 @@
     {{ image | image_url: width: 450 }} 1x,
     {{ image | image_url: width: 900 }} 2x
   "
-  alt="{{ image.alt | escape | default: product.title }}"
+  alt="{{ image.alt | escape }}"
   loading="lazy"
   width="411"
   height="411"
