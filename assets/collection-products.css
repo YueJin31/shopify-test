@@ -308,7 +308,8 @@
 .collection-products__item:hover,
 .collection-products__item:has(.collection-products__item-action:focus-visible),
 .collection-products__item:has(.collection-products__item-link:focus-visible) {
-  .collection-products__item-image {
+  .collection-products__item-image,
+  .collection-products__item-placeholder-svg {
     transform: scale(1.3);
   }
 
