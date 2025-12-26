@@ -16,6 +16,7 @@ const COLLECTION_SELECTORS = {
 
 const COLLECTION_CLASSES = {
   active: "is-active",
+  hidden: "hidden",
 };
 
 function initSwatches(block) {
@@ -41,31 +42,13 @@ function setActiveSwatch(container, current) {
   current.classList.add(COLLECTION_CLASSES.active);
 }
 
-function updateProductUI(productItem, { variantImage, variantPrice, variantComparePrice, variantId, variantQuantity }) {
-  const productPicture = productItem.querySelector(COLLECTION_SELECTORS.productPicture);
-  const productImg = productPicture?.querySelector("img");
+function updateProductUI(productItem, { variantPrice, variantComparePrice, variantId, variantQuantity }) {
+  const currentProductImage = productItem.querySelector(`${COLLECTION_SELECTORS.productPicture}[data-variant-id="${variantId}"]`);
+  const activeProductImages = productItem.querySelectorAll(`${COLLECTION_SELECTORS.productPicture}:not(${COLLECTION_CLASSES.hidden})`);
 
-  if (variantImage && productPicture && productImg) {
-    const widths = {
-      small: 200,
-      medium: 300,
-      large: 450,
-    };
-
-    const smallSource = productPicture.querySelector('source[media="(max-width: 420px)"]');
-    if (smallSource) {
-      smallSource.srcset = `${variantImage}&width=${widths.small} 1x, ${variantImage}&width=${widths.small * 2} 2x`;
-    }
-
-    const mediumSource = productPicture.querySelector('source[media="(max-width: 991px)"]');
-    if (mediumSource) {
-      mediumSource.srcset = `${variantImage}&width=${widths.medium} 1x, ${variantImage}&width=${widths.medium * 2} 2x`;
-    }
-
-    productImg.src = `${variantImage}&width=${widths.large}`;
-    productImg.srcset = `${variantImage}&width=${widths.large} 1x, ${variantImage}&width=${widths.large * 2} 2x`;
-    productImg.width = productImg.width;
-    productImg.height = productImg.height;
+  if (currentProductImage) {
+    activeProductImages.forEach((el) => el.classList.add(COLLECTION_CLASSES.hidden));
+    currentProductImage.classList.remove(COLLECTION_CLASSES.hidden);
   }
 
   const productPriceElement = productItem.querySelector(COLLECTION_SELECTORS.productPrice);

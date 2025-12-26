@@ -1,0 +1,32 @@
+<source
+  class="collection-products__item-image js-collection-products-item-image"
+  media="(max-width: 420px)"
+  srcset="
+    {{ image | image_url: width: 200 }} 1x,
+    {{ image | image_url: width: 400 }} 2x
+  "
+  type="image/webp"
+>
+
+<source
+  class="collection-products__item-image js-collection-products-item-image"
+  media="(max-width: 991px)"
+  srcset="
+    {{ image | image_url: width: 300 }} 1x,
+    {{ image | image_url: width: 600 }} 2x
+  "
+  type="image/webp"
+>
+
+<img
+  class="collection-products__item-image js-collection-products-item-image"
+  src="{{ image | image_url: width: 450 }}"
+  srcset="
+    {{ image | image_url: width: 450 }} 1x,
+    {{ image | image_url: width: 900 }} 2x
+  "
+  alt="{{ image.alt | escape | default: product.title }}"
+  loading="lazy"
+  width="411"
+  height="411"
+>

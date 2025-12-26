@@ -101,41 +101,34 @@
                 </div>
 
                 <a class="collection-products__item-link" href="{{ product.url }}">
-                  {% if product.featured_image %}
+                  {% assign color_option = product.options_by_name.Color | default: product.options_by_name.Colour %}
+
+                  {% if color_option %}
+                    {% for value in color_option.values %}
+                      {% assign variant_image = value.variant.image %}
+
+                      {% if variant_image %}
+                        <picture
+                          class="collection-products__item-picture js-collection-products-item-picture {% unless forloop.first %}hidden{% endunless %}"
+                          data-variant-id="{{ value.variant.id }}"
+                        >
+                          {% render 'collection-product-picture', image: variant_image, product: product %}
+                        </picture>
+                      {% else %}
+                        <div
+                          class="collection-products__item-placeholder js-collection-products-item-picture {% unless forloop.first %}hidden{% endunless %}"
+                          data-variant-id="{{ value.variant.id }}"
+                        >
+                          {{ 'product-apparel-2' | placeholder_svg_tag: 'collection-products__item-placeholder-svg' }}
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+
+                  {% elsif product.featured_image %}
                     <picture class="collection-products__item-picture js-collection-products-item-picture">
-                      <source
-                        class="collection-products__item-image js-collection-products-item-image"
-                        media="(max-width: 420px)"
-                        srcset="
-                          {{ product.featured_image | image_url: width: 200 }} 1x,
-                          {{ product.featured_image | image_url: width: 400 }} 2x
-                        "
-                        type="image/webp"
-                      >
-
-                      <source
-                        class="collection-products__item-image js-collection-products-item-image"
-                        media="(max-width: 991px)"
-                        srcset="
-                          {{ product.featured_image | image_url: width: 300 }} 1x,
-                          {{ product.featured_image | image_url: width: 600 }} 2x
-                        "
-                        type="image/webp"
-                      >
-
-                      <img
-                        class="collection-products__item-image js-collection-products-item-image"
-                        src="{{ product.featured_image | image_url: width: 450 }}"
-                        srcset="
-                          {{ product.featured_image | image_url: width: 450 }} 1x,
-                          {{ product.featured_image | image_url: width: 900 }} 2x
-                        "
-                        alt="{{ product.featured_image.alt | escape | default: product.title }}"
-                        loading="lazy"
-                        width="411"
-                        height="411"
-                      >
+                      {% render 'collection-product-picture', image: product.featured_image, product: product %}
                     </picture>
+
                   {% else %}
                     <div class="collection-products__item-placeholder">
                       {{ 'product-apparel-1' | placeholder_svg_tag: 'collection-products__item-placeholder-svg' }}
@@ -143,8 +136,6 @@
                   {% endif %}
                 </a>
               </div>
-
-              {% assign color_option = product.options_by_name.Color | default: product.options_by_name.Colour %}
 
               {% if color_option %}
                 <div class="collection-products__item-swatches js-color-swatch">
@@ -157,9 +148,6 @@
                       data-variant-price="{{ value.variant.price | money }}"
                       data-variant-quantity="{{ value.variant.inventory_quantity }}"
                       data-variant-compare-price="{{ value.variant.compare_at_price | money }}"
-                      {% if value.variant.image %}
-                        data-variant-image="{{ value.variant.image | image_url }}"
-                      {% endif %}
                     >
                       <span
                         class="collection-products__item-swatch-color"
