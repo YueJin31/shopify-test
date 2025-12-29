@@ -25,7 +25,7 @@
           <source
             media="(max-width: 991px)"
             srcset="
-              {{ collection_banner | image_url: height: 600 }} 1x,
+              {{ collection_banner | image_url: height: 600 }} 1x,+
               {{ collection_banner | image_url: height: 1200 }} 2x
             "
             type="image/webp"
@@ -105,14 +105,15 @@
 
                   {% if color_option %}
                     {% for value in color_option.values %}
-                      {% assign variant_image = value.variant.image %}
+                      {% assign variant_image = value.variant.image %}.
+                      {% assign image_to_show = variant_image | default: product.featured_image %}
 
-                      {% if variant_image %}
+                      {% if image_to_show %}
                         <picture
                           class="collection-products__item-picture js-collection-products-item-picture {% unless forloop.first %}hidden{% endunless %}"
                           data-variant-id="{{ value.variant.id }}"
                         >
-                          {% render 'collection-product-picture', image: variant_image %}
+                          {% render 'collection-product-picture', image: image_to_show %}
                         </picture>
                       {% else %}
                         <div
