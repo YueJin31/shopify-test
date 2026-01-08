@@ -3,7 +3,7 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0 0 0 / 70%);
+  background: rgba(0 0 0 / 30%);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -26,16 +26,26 @@
   left: 50%;
   transform: translate(-50%, -50%);
   background: var(--white);
-  padding: 70px 40px 32px;
-  max-width: 450px;
+  padding: 56px 36px 40px 16px;
+  max-width: 1040px;
   width: 100%;
   border-radius: 16px;
+  overflow: hidden;
+  max-height: 95vh;
+  display: flex;
+  flex-direction: column;
+
+  @media screen and (max-width: 1280px) {
+    max-width: 95%;
+    padding: 72px 12px 24px 24px;
+  }
 }
 
-@media screen and (max-width: 767px) {
-  .modal__content {
-    max-width: 95%;
-  }
+.modal__inner-content {
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-color: #b9b9b9 transparent;
+  padding-right: 12px;
 }
 
 .modal__close-button {
@@ -48,16 +58,25 @@
   align-items: center;
   justify-content: center;
   border: 1px solid var(--light-gray);
-  border-radius: 16px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 30px;
+  background: none;
+
+  &::after {
+    content: "";
+    width: 16px;
+    height: 16px;
+    display: block;
+    background: url('data:image/svg+xml,<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4L4 12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 4L12 12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat;
+    background-size: contain;
+  }
 }
 
 .modal__text {
   text-align: center;
   margin: 0;
 
-  @media screen and (max-width: 767px) {
+  @media screen and (max-width: 768px) {
     font-size: 28px;
   }
 }

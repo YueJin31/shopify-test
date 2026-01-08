@@ -1,0 +1,292 @@
+{{ 'quick-view.css' | asset_url | stylesheet_tag }}
+{{ 'modal.css' | asset_url | stylesheet_tag }}
+
+<section
+  class="quick-view js-quick-view"
+  data-section-id="{{ section.id }}"
+>
+  <div class="quick-view__media">
+    <div class="swiper js-swiper-main">
+      <div class="swiper-wrapper">
+        {% if product.media != blank %}
+          {% for media in product.media %}
+            <div class="quick-view__product-item swiper-slide" data-media-id="{{ media.id }}">
+              {% if media.media_type == 'external_video' %}
+                {% if media.host == 'youtube' or media.host == 'viemo' %}
+                  <div class="quick-view__product-item-video">
+                    {{ media | external_video_url | external_video_tag }}
+                  </div>
+                {% endif %}
+              {% elsif media.media_type == 'video' %}
+                {{ media | video_tag: image_size: '480x', controls: true }}
+              {% else %}
+                <picture
+                  class="quick-view__product-item-picture"
+                >
+                  <source
+                    class="quick-view__product-item-image"
+                    media="(max-width: 420px)"
+                    srcset="
+                      {{ media.src | image_url: width: 400 }} 1x,
+                      {{ media.src | image_url: width: 800 }} 2x
+                    "
+                    type="image/webp"
+                  >
+
+                  <source
+                    class="quick-view__product-item-image"
+                    media="(max-width: 767px)"
+                    srcset="
+                      {{ media.src | image_url: width: 700 }} 1x,
+                      {{ media.src | image_url: width: 1400 }} 2x
+                    "
+                    type="image/webp"
+                  >
+
+                  <img
+                    class="quick-view__product-item-image"
+                    src="{{ media.src | image_url: width: 500 }}"
+                    srcset="
+                      {{ media.src | image_url: width: 500 }} 1x,
+                      {{ media.src | image_url: width: 1000 }} 2x
+                    "
+                    alt="{{ media.src.alt | escape }}"
+                    width="480"
+                    height="480"
+                  >
+                </picture>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="quick-view__product-item-placeholder">
+            {{ 'product-apparel-1' | placeholder_svg_tag: 'quick-view__product-item-placeholder-svg' }}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>
+
+    <div class="swiper js-swiper-thumbs">
+      <div class="swiper-wrapper">
+        {% if product.media != blank %}
+          {% for media in product.media %}
+            {% assign media_image = media.preview_image | default: media %}
+
+            <div class="quick-view__product-item swiper-slide">
+              <img
+                class="quick-view__product-item-image"
+                src="{{ media_image | image_url: width: 75 }}"
+                srcset="
+                  {{ media_image | image_url: width: 75 }} 1x,
+                  {{ media_image | image_url: width: 150 }} 2x
+                "
+                alt="{{ media_image.alt | escape }}"
+                width="75"
+                height="75"
+                loading="lazy"
+              >
+            </div>
+          {% endfor %}
+
+        {% else %}
+          <div class="quick-view__product-item-placeholder quick-view__product-item swiper-slide">
+            {{ 'product-apparel-1' | placeholder_svg_tag: 'quick-view__product-item-placeholder-svg' }}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="quick-view__content js-quick-view-content"
+    data-featured-media-id="{{ product.selected_or_first_available_variant.featured_media.id }}"
+  >
+    {% form 'product', product, class: 'js-quick-view-form' %}
+      {% if product.title != blank %}
+        <h3 class="quick-view__title">{{ product.title }}</h3>
+      {% endif %}
+
+      <div class="quick-view__price-info">
+        <span class="quick-view__price">
+          {{ product.selected_or_first_available_variant.price | money }}
+        </span>
+
+        {% if product.selected_or_first_available_variant.compare_at_price
+            > product.selected_or_first_available_variant.price
+        %}
+          <span class="quick-view__price quick-view__price--old">
+            {{ product.selected_or_first_available_variant.compare_at_price | money }}
+          </span>
+        {% endif %}
+      </div>
+
+      <p class="quick-view__current-title">
+        Inventory quantity:
+
+        <span class="quick-view__current-title-value">
+          {{ product.selected_or_first_available_variant.inventory_quantity }}
+        </span>
+      </p>
+
+      {% unless product.has_only_default_variant %}
+        <div class="quick-view__options">
+          {% for option in product.options_with_values %}
+            {% assign option_index = option.position | minus: 1 %}
+
+            {% if option.name == 'Color' %}
+              <div class="quick-view__swatches">
+                <p class="quick-view__current-title">
+                  {{ option.name | append: ':' }}
+
+                  <span class="quick-view__current-title-value">
+                    {{ product.selected_or_first_available_variant.options[option_index] }}
+                  </span>
+                </p>
+
+                <div class="quick-view__swatches-list">
+                  {% for value in option.values %}
+                    {% liquid
+                      if value.variant and value.variant.image
+                        assign image_to_show = value.variant.image | image_url: width: 60
+                      elsif value.swatch.image
+                        assign image_to_show = value.swatch.image | image_url: width: 60
+                      else
+                        assign image_to_show = product.featured_image | image_url: width: 60
+                      endif
+                    %}
+
+                    <div class="quick-view__swatches-list-item">
+                      <input
+                        class="quick-view__item-swatch js-quick-view-swatch-input js-quick-view-input{% unless value.available %} is-disabled{% endunless %}"
+                        type="radio"
+                        name="option{{ option.position }}"
+                        data-option-value-id="{{ value.id }}"
+                        data-image="{{ image_to_show }}"
+                        style="background: url('{{ image_to_show }}') no-repeat center / cover"
+                        {% if value.selected %}
+                          checked
+                        {% endif %}
+                      >
+
+                      <div class="quick-view__item-swatch-tooltip">{{ value.name }}</div>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% else %}
+              <div class="quick-view__option">
+                <p class="quick-view__current-title">
+                  {{ option.name | append: ':' }}
+
+                  <span class="quick-view__current-title-value">
+                    {{ product.selected_or_first_available_variant.options[option_index] }}
+                  </span>
+                </p>
+
+                <div class="quick-view__option-item">
+                  {% for value in option.values %}
+                    <div class="quick-view__option-item">
+                      <input
+                        data-option-value-id="{{ value.id }}"
+                        id="{{ value.id }}"
+                        class="quick-view__option-input js-quick-view-input{% unless value.available %} is-disabled{% endunless %}"
+                        type="radio"
+                        name="option{{ option.position }}"
+                        value="{{ value }}"
+                        {% if value.selected %}
+                          checked
+                        {% endif %}
+                      >
+
+                      <label for="{{ value.id }}" class="quick-view__option-label">{{ value }}</label>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endunless %}
+
+      <div class="quick-view__quantity js-quick-view-quantity">
+        <button
+          type="button"
+          class="quick-view__quantity-button js-quick-view-quantity-button"
+          data-action="minus"
+        ></button>
+
+        <input
+          type="number"
+          name="quantity"
+          value="1"
+          min="1"
+          class="quick-view__quantity-input js-quick-view-quantity-input"
+        >
+
+        <button
+          type="button"
+          class="quick-view__quantity-button js-quick-view-quantity-button"
+          data-action="plus"
+        ></button>
+      </div>
+
+      <div class="quick-view__buttons">
+        <button
+          class="quick-view__button js-quick-view-add-to-cart"
+          {% unless product.selected_or_first_available_variant.available %}
+            disabled
+          {% endunless %}
+        >
+          {% if product.selected_or_first_available_variant.available %}Add to cart{% else %}Sold out{% endif %}
+        </button>
+
+        <a href="{{ product.url }}" class="quick-view__product-link">Visit Product Page</a>
+      </div>
+
+      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+
+      <script type="application/json" data-selected-variant>
+        {{ product.selected_or_first_available_variant | json }}
+      </script>
+    {% endform %}
+  </div>
+</section>
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css"
+>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+
+{% schema %}
+{
+  "name": "Quick View",
+  "disabled_on": {
+    "templates": ["*"],
+    "groups": ["*"]
+  },
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "collection_custom_image",
+      "label": "Collection custom image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quick View",
+      "category": "Custom Sections"
+    }
+  ]
+}
+{% endschema %}

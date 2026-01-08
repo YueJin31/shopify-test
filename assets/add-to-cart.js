@@ -24,13 +24,14 @@ function initAddToCart() {
 
 async function handleAddToCart(button) {
   const variantId = button.dataset.variantId;
+  const variantQuainity = button.dataset?.variantQuantity;
 
   button.disabled = true;
 
   try {
-    await addItemToCart(variantId);
+    await addItemToCart(variantId, variantQuainity);
 
-    dispatchCartUpdate(variantId);
+    dispatchCartUpdate(variantId, variantQuainity);
     showCartNotification("Added to cart");
   } catch (error) {
     showCartNotification(error.message, true);
@@ -53,13 +54,13 @@ function addItemToCart(variantId, quantity = 1) {
   });
 }
 
-function dispatchCartUpdate(variantId) {
+function dispatchCartUpdate(variantId, variantQuainity = 1) {
   document.dispatchEvent(
     new CustomEvent(CART_EVENTS.update, {
       bubbles: true,
       detail: {
         data: {
-          itemCount: 1,
+          itemCount: variantQuainity,
           source: "product-form-component",
           variantId,
         },

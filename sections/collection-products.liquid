@@ -98,6 +98,12 @@
                       disabled
                     {% endunless %}
                   ></button>
+
+                  <button
+                    class="collection-products__item-action collection-products__item-action--quick-view js-quick-view"
+                    data-section-id="{{ section.id }}"
+                    data-product-handle="{{ product.handle }}"
+                  ></button>
                 </div>
 
                 <a class="collection-products__item-link" href="{{ product.url }}">
@@ -195,6 +201,7 @@
 </section>
 
 <script src="{{ 'collection-products.js' | asset_url }}" defer></script>
+<script src="{{ 'quick-view.js' | asset_url }}" defer></script>
 <script src="{{ 'add-to-cart.js' | asset_url }}" defer></script>
 
 <link
