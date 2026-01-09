@@ -124,14 +124,6 @@
         {% endif %}
       </div>
 
-      <p class="quick-view__current-title">
-        Inventory quantity:
-
-        <span class="quick-view__current-title-value">
-          {{ product.selected_or_first_available_variant.inventory_quantity }}
-        </span>
-      </p>
-
       {% unless product.has_only_default_variant %}
         <div class="quick-view__options">
           {% for option in product.options_with_values %}
