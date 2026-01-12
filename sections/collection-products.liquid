@@ -1,5 +1,7 @@
 {{ 'collection-products.css' | asset_url | stylesheet_tag }}
 {{ 'cart-notification.css' | asset_url | stylesheet_tag }}
+{{ 'modal.css' | asset_url | stylesheet_tag }}
+{{ 'quick-view.css' | asset_url | stylesheet_tag }}
 
 {% liquid
   assign collection = section.settings.collection
@@ -100,7 +102,7 @@
                   ></button>
 
                   <button
-                    class="collection-products__item-action collection-products__item-action--quick-view js-quick-view"
+                    class="collection-products__item-action collection-products__item-action--quick-view js-quick-view-trigger"
                     data-section-id="{{ section.id }}"
                     data-product-handle="{{ product.handle }}"
                   ></button>
