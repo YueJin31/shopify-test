@@ -35,6 +35,7 @@ function QuickViewInit() {
 
     if (button && !modal && !button.disabled) {
       const handle = button.dataset.productHandle;
+
       if (!handle) return;
 
       activeTrigger = button;
@@ -85,11 +86,14 @@ function QuickViewInit() {
 
   function handleGlobalSubmit(e) {
     if (!modal) return;
+
     const form = e.target.closest(QUICK_VIEW_SELECTORS.quickViewForm);
+
     if (!form) return;
 
     e.preventDefault();
     const submitter = e.submitter || form.querySelector(QUICK_VIEW_SELECTORS.quickViewAddToCart);
+
     if (!submitter) return;
 
     const formData = new FormData(form);
@@ -101,6 +105,7 @@ function QuickViewInit() {
     const variantQuantity = formData.get("quantity");
 
     button.disabled = true;
+
     try {
       await addItemToCart(variantId, variantQuantity);
       dispatchCartUpdate(variantId, variantQuantity);
@@ -164,19 +169,27 @@ function QuickViewInit() {
     const value = parseInt(input.value, 10) || 1;
     input.value = value;
 
+    updateMinusButtonColor(container, value);
+
+    input.addEventListener("input", (e) => {
+      const currentValue = parseInt(e.target.value, 10);
+
+      if (!currentValue || currentValue < 1) {
+        updateMinusButtonColor(container, 0);
+        return;
+      }
+
+      updateMinusButtonColor(container, currentValue);
+    });
+
     input.addEventListener("blur", (e) => {
       let value = parseInt(e.target.value, 10);
 
       if (!value || value < 1) value = 1;
 
       e.target.value = value;
-
-      const container = e.target.closest(QUICK_VIEW_SELECTORS.quantityContainer);
-
-      if (container) updateMinusButtonColor(container, value);
+      updateMinusButtonColor(container, value);
     });
-
-    updateMinusButtonColor(container, value);
   }
 
   function updateMinusButtonColor(container, currentValue) {
@@ -200,16 +213,22 @@ function QuickViewInit() {
       .then((html) => {
         const doc = new DOMParser().parseFromString(html, "text/html");
         const newContent = doc.querySelector(QUICK_VIEW_SELECTORS.quickViewContent);
+
         content.innerHTML = newContent.innerHTML;
+
+        initQuantityState();
 
         content.querySelectorAll(QUICK_VIEW_SELECTORS.quantityContainer).forEach((container) => {
           const input = container.querySelector(QUICK_VIEW_SELECTORS.quantityInput);
+
           if (input) updateMinusButtonColor(container, parseInt(input.value, 10) || 1);
         });
       })
       .then(() => {
         const variantObject = JSON.parse(content.querySelector("[data-selected-variant]").innerHTML);
+
         const mediaId = variantObject?.featured_media?.id;
+
         if (mediaId) slideToFeaturedMedia(mediaId);
       })
       .catch(console.error);
@@ -217,7 +236,9 @@ function QuickViewInit() {
 
   function slideToFeaturedMedia(mediaId) {
     if (!mainSwiper || !mediaId) return;
+
     const index = [...mainSwiper.slides].findIndex((slide) => +slide.dataset.mediaId === mediaId);
+
     if (index !== -1) mainSwiper.slideTo(index);
   }
 
