@@ -1,0 +1,715 @@
+{{ 'mini-cart.css' | asset_url | stylesheet_tag }}
+{{ 'collection-products.css' | asset_url | stylesheet_tag }}
+{{ 'cart-notification.css' | asset_url | stylesheet_tag }}
+{{ 'modal.css' | asset_url | stylesheet_tag }}
+{{ 'quick-view.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign cart_heading = section.settings.cart_heading
+
+  assign promo_message_icon = section.settings.promo_message_icon
+  assign promo_message_text = section.settings.promo_message_text
+  assign promo_message_color = section.settings.promo_message_color
+  assign promo_message_background = section.settings.promo_message_background
+
+  assign empty_cart_icon = section.settings.empty_cart_icon
+  assign empty_cart_heading = section.settings.empty_cart_heading
+  assign empty_cart_textarea = section.settings.empty_cart_textarea
+  assign empty_cart_promo_products = section.settings.empty_cart_promo_products
+
+  assign upsell_products_heading = section.settings.upsell_products_heading
+  assign upsell_products_items = section.settings.upsell_products_items
+
+  assign free_shipping_amount = section.settings.free_shipping_amount
+  assign free_shipping_message = section.settings.free_shipping_message
+  assign free_shipping_congratulatory_message = section.settings.free_shipping_congratulatory_message
+  assign free_shipping_progress_bar_bg_color = section.settings.free_shipping_progress_bar_bg_color
+  assign free_shipping_progress_bar_color = section.settings.free_shipping_progress_bar_color
+
+  assign cart_note_enable = section.settings.cart_note_enable
+  assign cart_note_label = section.settings.cart_note_label
+  assign cart_note_edit_label = section.settings.cart_note_edit_label
+
+  assign terms_and_conditions_text = section.settings.terms_and_conditions_text
+%}
+
+<section class="mini-cart js-mini-cart" data-section-id="{{ section.id }}">
+  <div class="mini-cart__inner js-mini-cart-inner">
+    {% form 'cart', cart, class: 'mini-cart__form' %}
+      <div class="mini-cart__header">
+        {% if cart_heading != blank %}
+          <h4 class="mini-cart__header-title">
+            {{ cart_heading | append: ' (' | append: cart.item_count | append: ')' }}
+          </h4>
+        {% endif %}
+
+        <button type="button" class="mini-cart__close-btn js-mini-cart-close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M12 4L4 12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M4 4L12 12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      {% if cart.item_count > 0 %}
+        {% if promo_message_text != blank or promo_message_icon != blank %}
+          <div
+            class="mini-cart__promo"
+            {% if promo_message_background != 'rgba(0,0,0,0)' %}
+              style="background:{{ promo_message_background }}"
+            {% endif %}
+          >
+            {% if promo_message_icon != blank %}
+              <img
+                class="mini-cart__promo-icon"
+                src="{{ promo_message_icon | image_url: width: 24 }}"
+                srcset="
+                  {{ promo_message_icon | image_url: width: 24 }} 1x,
+                  {{ promo_message_icon | image_url: width: 50 }} 2x
+                "
+                alt="{{ promo_message_icon.alt | escape }}"
+                width="24"
+                height="24"
+              >
+            {% endif %}
+
+            {% if promo_message_text != blank %}
+              <p
+                class="mini-cart__promo-text"
+                {% if promo_message_color != 'rgba(0,0,0,0)' %}
+                  style="color:{{ promo_message_color }}"
+                {% endif %}
+              >
+                {{ promo_message_text }}
+              </p>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        <div class="mini-cart__list-items">
+          {% for item in cart.items %}
+            <div
+              class="mini-cart__item js-mini-cart-item"
+              data-line="{{ forloop.index }}"
+            >
+              {% if item.image != blank %}
+                <div class="mini-cart__item-image-wrapper">
+                  <a href="{{ item.url }}">
+                    <img
+                      class="mini-cart__item-image"
+                      src="{{ item.image | image_url: width: 100 }}"
+                      srcset="
+                        {{ item.image | image_url: width: 100 }} 1x,
+                        {{ item.image | image_url: width: 200 }} 2x
+                      "
+                      alt="{{ item.title | escape }}"
+                      width="100"
+                      height="100"
+                    >
+                  </a>
+                </div>
+              {% else %}
+                <div class="mini-cart__item-placeholder">
+                  <a href="{{ item.url }}">
+                    {{ 'product-apparel-1' | placeholder_svg_tag: 'mini-cart__item-image-svg' }}
+                  </a>
+                </div>
+              {% endif %}
+
+              <div class="mini-cart__item-info">
+                <button class="mini-cart__remove-button js-mini-cart-remove-btn" type="button" aria-label="Remove Item">
+                  <svg
+                    class="mini-cart__remove-button-svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path class="mini-cart__remove-button-svg-cover" d="M14 3.98665C11.78 3.76665 9.54667 3.65332 7.32 3.65332C6 3.65332 4.68 3.71999 3.36 3.85332L2 3.98665" stroke="#9D9D9D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path class="mini-cart__remove-button-svg-cover" d="M5.66675 3.31337L5.81341 2.44004C5.92008 1.80671 6.00008 1.33337 7.12675 1.33337H8.87341C10.0001 1.33337 10.0867 1.83337 10.1867 2.44671L10.3334 3.31337" stroke="#9D9D9D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12.5667 6.09338L12.1334 12.8067C12.06 13.8534 12 14.6667 10.14 14.6667H5.86002C4.00002 14.6667 3.94002 13.8534 3.86668 12.8067L3.43335 6.09338" stroke="#9D9D9D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6.88672 11H9.10672" stroke="#9D9D9D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M6.33325 8.33337H9.66659" stroke="#9D9D9D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+
+                <a href="{{ item.url }}">
+                  <h3 class="mini-cart__item-title">{{ item.product.title }}</h3>
+                </a>
+
+                {% if item.variant.title != 'Default Title' %}
+                  <p class="mini-cart__item-variant-title">{{ item.variant.title }}</p>
+                {% endif %}
+
+                <div class="mini-cart__actions js-mini-cart-actions">
+                  <div class="mini-cart__quantity js-mini-cart-quantity">
+                    <button
+                      type="button"
+                      class="mini-cart__quantity-button js-mini-cart-quantity-button"
+                      data-action="minus"
+                    >
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 12H18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+
+                    <input
+                      type="number"
+                      name="quantity"
+                      data-quantity="{{ item.quantity }}"
+                      value="{{ item.quantity }}"
+                      min="1"
+                      class="mini-cart__quantity-input js-mini-cart-quantity-input"
+                    >
+
+                    <button
+                      type="button"
+                      class="mini-cart__quantity-button js-mini-cart-quantity-button"
+                      data-action="plus"
+                    >
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 12H18" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M12 18V6" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div class="mini-cart__item-price-container">
+                    <div class="mini-cart__item-price">
+                      <span>{{ item.line_price | money }}</span>
+                    </div>
+
+                    {% if item.variant.compare_at_price != blank %}
+                      {% assign compare_total = item.variant.compare_at_price | times: item.quantity %}
+
+                      <div class="mini-cart__item-compare-price">
+                        <span>{{ compare_total | money }}</span>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+
+        {% if upsell_products_heading != blank and upsell_products_items %}
+          <div class="mini-cart__upsell-products js-upsell-products">
+            <div class="mini-cart__upsell-products-header">
+              <p class="mini-cart__upsell-products-title">{{ upsell_products_heading }}</p>
+
+              <div class="mini-cart__upsell-products-navigation">
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+              </div>
+            </div>
+
+            <div class="mini-cart__upsell-products__list swiper js-upsell-swiper">
+              <div class="swiper-wrapper">
+                {% for item in upsell_products_items %}
+                  {% assign is_in_cart = false %}
+
+                  {% for cart_item in cart.items %}
+                    {% if cart_item.product.id == item.id %}
+                      {% assign is_in_cart = true %}
+                      {% break %}
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if is_in_cart %}
+                    {% continue %}
+                  {% endif %}
+
+                  <div class="mini-cart__upsell-products__item swiper-slide">
+                    {% if item.featured_image != blank %}
+                      <div class="mini-cart__item-image-wrapper">
+                        <a href="{{ item.url }}">
+                          <img
+                            class="mini-cart__item-image"
+                            src="{{ item.featured_image | image_url: width: 80 }}"
+                            srcset="
+                              {{ item.featured_image | image_url: width: 80 }} 1x,
+                              {{ item.featured_image | image_url: width: 160 }} 2x
+                            "
+                            alt="{{ item.title | escape }}"
+                            width="80"
+                            height="80"
+                          >
+                        </a>
+                      </div>
+                    {% else %}
+                      <div class="mini-cart__item-placeholder">
+                        <a href="{{ item.url }}">
+                          {{ 'product-apparel-1' | placeholder_svg_tag: 'mini-cart__item-image-svg' }}
+                        </a>
+                      </div>
+                    {% endif %}
+
+                    <div class="mini-cart__item-info">
+                      <a href="{{ item.url }}">
+                        <h3 class="mini-cart__item-title">{{ item.title }}</h3>
+                      </a>
+
+                      <div class="mini-cart__actions js-mini-cart-actions">
+                        <div class="mini-cart__item-price-container">
+                          <div class="mini-cart__item-price">
+                            <span>{{ item.selected_or_first_available_variant.price | money }}</span>
+                          </div>
+
+                          {% if item.selected_or_first_available_variant.compare_at_price
+                              > item.selected_or_first_available_variant.price
+                          %}
+                            <span class="mini-cart__item-compare-price">
+                              {{ item.selected_or_first_available_variant.compare_at_price | money }}
+                            </span>
+                          {% endif %}
+                        </div>
+
+                        <button
+                          type="button"
+                          class="mini-cart__upsell-products__button js-mini-cart-add-to-cart"
+                          data-variant-id="{{ item.selected_or_first_available_variant.id }}"
+                          {% unless item.selected_or_first_available_variant.available %}
+                            disabled
+                          {% endunless %}
+                        >
+                          {% if item.selected_or_first_available_variant.available %}
+                            Add to cart
+                          {% else %}
+                            Sold out
+                          {% endif %}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if free_shipping_amount != blank %}
+          {% assign free_shipping_amount_formatted = free_shipping_amount | money %}
+          {% assign free_shipping_amount_html = '<span class="mini-cart__free-shipping-amount">'
+            | append: free_shipping_amount_formatted
+            | append: '</span>'
+          %}
+
+          {% assign subtotal = cart.items_subtotal_price %}
+
+          {% if subtotal >= free_shipping_amount %}
+            {% assign progress_percent = 100 %}
+            {% assign message_with_amount = free_shipping_congratulatory_message %}
+
+            {% assign message_with_amount = '<p class="mini-cart__free-shipping-congratulatory">'
+              | append: message_with_amount
+              | append: '</p>'
+            %}
+          {% else %}
+            {% assign progress_percent = subtotal | times: 100 | divided_by: free_shipping_amount %}
+            {% assign message_with_amount = free_shipping_message | replace: '{amount}', free_shipping_amount_html %}
+          {% endif %}
+
+          <div class="mini-cart__free-shipping">
+            <p class="mini-cart__free-shipping-text">
+              {{ message_with_amount }}
+            </p>
+
+            <div
+              class="mini-cart__fre-shipping-progress"
+              style="background: {{ free_shipping_progress_bar_bg_color }};"
+            >
+              <span
+                class="mini-cart__fre-shipping-progress-line"
+                style="width: {{ progress_percent }}%; background: {{ free_shipping_progress_bar_color }};"
+              ></span>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if cart_note_enable %}
+          <div class="mini-cart__note-accordion js-mini-cart-note-accordion">
+            <button
+              type="button"
+              class="mini-cart__note-accordion-title js-mini-cart-note-accordion-title"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M4 8H12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path class="mini-cart__note-plus" d="M8 12V4" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+
+              <span
+                class="js-mini-cart-note-accordion-label"
+                data-edit-label="{{ cart_note_edit_label }}"
+                data-default-label="{{ cart_note_label }}"
+              >
+                {{ cart_note_label }}
+              </span>
+            </button>
+
+            <div class="mini-cart__note-accordion-content js-mini-cart-note-accordion-content">
+              <textarea
+                class="mini-cart__note-accordion-textarea js-mini-cart-note-accordion-textarea"
+                name="note"
+                id="note"
+                placeholder="Leave a note for seller"
+              >
+              {{- cart.note -}}</textarea>
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="mini-cart__footer">
+          <div class="mini-cart__subtotal">
+            Subtotal:
+            <span class="mini-cart__subtotal-price js-mini-cart-subtotal">{{ cart.items_subtotal_price | money }}</span>
+          </div>
+
+          <p class="mini-cart__tax-text">Tax included and shipping calculated at checkout</p>
+
+          {% if terms_and_conditions_text != blank %}
+            <div class="mini-cart__terms-conditions">
+              <input
+                type="checkbox"
+                class="mini-cart__terms-conditions-input js-mini-cart-terms-checkbox"
+                id="mini-cart__terms-conditions"
+                name="terms-conditions"
+              >
+              <label for="mini-cart__terms-conditions">
+                {{ terms_and_conditions_text }}
+              </label>
+            </div>
+          {% endif %}
+
+          <button
+            type="submit"
+            class="mini-cart__checkout button js-mini-cart-checkout-btn"
+            name="checkout"
+            {% if terms_and_conditions_text != blank %}
+              disabled
+            {% endif %}
+          >
+            Check out
+          </button>
+        </div>
+      {% else %}
+        <div class="mini-cart__empty js-mini-cart-empty">
+          {% if empty_cart_icon != blank or empty_cart_heading != blank or empty_cart_textarea != blank %}
+            <div class="mini-cart__empty-content">
+              {% if empty_cart_icon != blank %}
+                <div class="mini-cart__empty-image-wrapper">
+                  <img
+                    class="mini-cart__empty-image"
+                    src="{{ empty_cart_icon | image_url: width: 32 }}"
+                    srcset="
+                      {{ empty_cart_icon | image_url: width: 32 }} 1x,
+                      {{ empty_cart_icon | image_url: width: 65 }} 2x
+                    "
+                    alt="{{ empty_cart_icon.alt | escape }}"
+                    width="32"
+                    height="32"
+                  >
+                </div>
+              {% endif %}
+
+              {% if empty_cart_heading != blank %}
+                <p class="mini-cart__empty-title">{{ empty_cart_heading }}</p>
+              {% endif %}
+
+              {% if empty_cart_textarea != blank %}
+                <p class="mini-cart__empty-text">{{ empty_cart_textarea }}</p>
+              {% endif %}
+            </div>
+
+            {% if empty_cart_promo_products %}
+              <div class="mini-cart__empty-promo-products">
+                <div class="js-collection-products">
+                  <div class="mini-cart__empty-promo-products-header">
+                    <p class="mini-cart__empty-promo-products-title">You May Also Like</p>
+
+                    <div class="mini-cart__empty-promo-products-navigation">
+                      <div class="swiper-button-prev"></div>
+                      <div class="swiper-button-next"></div>
+                    </div>
+                  </div>
+
+                  <div class="collection-products__list swiper js-collection-products-swiper">
+                    <div class="swiper-wrapper">
+                      {% for product in empty_cart_promo_products %}
+                        <div class="collection-products__item swiper-slide js-collection-products-item">
+                          <div class="collection-products__item-image-wrapper">
+                            {% if product.tags.size > 0 %}
+                              <div class="collection-products__item-tags">
+                                {% for tag in product.tags %}
+                                  {% assign sale_class = tag | downcase %}
+
+                                  <span class="collection-products__item-tag {% if sale_class contains 'sale' %}collection-products__item-tag--sale{% endif %}">
+                                    {{ tag | capitalize }}
+                                  </span>
+                                {% endfor %}
+                              </div>
+                            {% endif %}
+
+                            <div class="collection-products__item-actions">
+                              <button
+                                class="collection-products__item-action js-collection-products-add-to-cart js-mini-cart-add-to-cart"
+                                aria-label="Add to cart"
+                                data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                                data-available-quantity="{{ product.selected_or_first_available_variant.inventory_quantity }}"
+                                {% unless product.selected_or_first_available_variant.available %}
+                                  disabled
+                                {% endunless %}
+                              ></button>
+
+                              <button
+                                class="collection-products__item-action collection-products__item-action--quick-view js-quick-view-trigger"
+                                data-section-id="{{ section.id }}"
+                                data-product-handle="{{ product.handle }}"
+                              ></button>
+                            </div>
+
+                            <a class="collection-products__item-link" href="{{ product.url }}">
+                              {% assign color_option = product.options_by_name.Color
+                                | default: product.options_by_name.Colour
+                              %}
+
+                              {% if color_option %}
+                                {% for value in color_option.values %}
+                                  {% assign variant_image = value.variant.image %}
+                                  {% assign image_to_show = variant_image | default: product.featured_image %}
+
+                                  {% if image_to_show %}
+                                    <picture
+                                      class="collection-products__item-picture js-collection-products-item-picture {% unless forloop.first %}hidden{% endunless %}"
+                                      data-variant-id="{{ value.variant.id }}"
+                                    >
+                                      {% render 'collection-product-picture', image: image_to_show %}
+                                    </picture>
+                                  {% else %}
+                                    <div
+                                      class="collection-products__item-placeholder js-collection-products-item-picture {% unless forloop.first %}hidden{% endunless %}"
+                                      data-variant-id="{{ value.variant.id }}"
+                                    >
+                                      {{
+                                        'product-apparel-2'
+                                        | placeholder_svg_tag: 'collection-products__item-placeholder-svg'
+                                      }}
+                                    </div>
+                                  {% endif %}
+                                {% endfor %}
+
+                              {% elsif product.featured_image %}
+                                <picture class="collection-products__item-picture js-collection-products-item-picture">
+                                  {% render 'collection-product-picture', image: product.featured_image %}
+                                </picture>
+
+                              {% else %}
+                                <div class="collection-products__item-placeholder">
+                                  {{
+                                    'product-apparel-1'
+                                    | placeholder_svg_tag: 'collection-products__item-placeholder-svg'
+                                  }}
+                                </div>
+                              {% endif %}
+                            </a>
+                          </div>
+
+                          {% if color_option %}
+                            <div class="collection-products__item-swatches js-color-swatch">
+                              {% for value in color_option.values %}
+                                <button
+                                  class="collection-products__item-swatch js-color-swatch-item {% if forloop.first %}is-active{% endif %}"
+                                  type="button"
+                                  aria-label="{{ value.name }}"
+                                  data-variant-id="{{ value.variant.id }}"
+                                  data-variant-price="{{ value.variant.price | money }}"
+                                  data-variant-quantity="{{ value.variant.inventory_quantity }}"
+                                  data-variant-compare-price="{{ value.variant.compare_at_price | money }}"
+                                >
+                                  <span
+                                    class="collection-products__item-swatch-color"
+                                    style="background-color: {{ value.swatch.color }}"
+                                  ></span>
+                                </button>
+                              {% endfor %}
+                            </div>
+                          {% endif %}
+
+                          <a class="collection-products__item-link" href="{{ product.url }}">
+                            <h3 class="collection-products__item-title">{{ product.title }}</h3>
+                          </a>
+
+                          {% liquid
+                            assign price_source = product
+
+                            if color_option
+                              assign price_source = product.selected_or_first_available_variant
+                            endif
+                          %}
+
+                          <div class="collection-products__item-price-info">
+                            <span class="collection-products__item-price js-collection-products-item-price">
+                              {{ price_source.price | money }}
+                            </span>
+
+                            {% if price_source.compare_at_price %}
+                              <span class="collection-products__item-price collection-products__item-price--old js-collection-products-compare-price">
+                                {{ price_source.compare_at_price | money }}
+                              </span>
+                            {% endif %}
+                          </div>
+                        </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endform %}
+  </div>
+</section>
+
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.css"
+>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@12/swiper-bundle.min.js"></script>
+
+{% schema %}
+{
+  "name": "Mini Cart",
+  "settings": [
+    {
+      "type": "text",
+      "id": "cart_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "header",
+      "content": "Empty cart"
+    },
+    {
+      "type": "image_picker",
+      "id": "empty_cart_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "text",
+      "id": "empty_cart_heading",
+      "label": "Heading "
+    },
+    {
+      "type": "textarea",
+      "id": "empty_cart_textarea",
+      "label": "Text "
+    },
+    {
+      "type": "product_list",
+      "id": "empty_cart_promo_products",
+      "label": "Promo products"
+    },
+    {
+      "type": "header",
+      "content": "Promo message"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "promo_message_text",
+      "label": "Text"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_message_icon",
+      "label": "Icon"
+    },
+    {
+      "type": "color",
+      "id": "promo_message_color",
+      "label": "Text Color"
+    },
+    {
+      "type": "color",
+      "id": "promo_message_background",
+      "label": "Background Color"
+    },
+    {
+      "type": "header",
+      "content": "Upsell products"
+    },
+    {
+      "type": "text",
+      "id": "upsell_products_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "product_list",
+      "id": "upsell_products_items",
+      "label": "Products"
+    },
+    {
+      "type": "header",
+      "content": "Free shipping"
+    },
+    {
+      "type": "number",
+      "id": "free_shipping_amount",
+      "label": "Free shipping amount"
+    },
+    {
+      "type": "textarea",
+      "id": "free_shipping_message",
+      "label": "Shipping message",
+      "default": "You are only {amount} away from free shipping"
+    },
+    {
+      "type": "textarea",
+      "id": "free_shipping_congratulatory_message",
+      "label": "Shipping congratulatory message"
+    },
+    {
+      "type": "color",
+      "id": "free_shipping_progress_bar_bg_color",
+      "label": "Progress bar background color"
+    },
+    {
+      "type": "color",
+      "id": "free_shipping_progress_bar_color",
+      "label": "Progress bar fill color"
+    },
+    {
+      "type": "header",
+      "content": "Cart note"
+    },
+    {
+      "type": "checkbox",
+      "id": "cart_note_enable",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cart_note_label",
+      "label": "Add note label"
+    },
+    {
+      "type": "text",
+      "id": "cart_note_edit_label",
+      "label": "Edit note label"
+    },
+    {
+      "type": "header",
+      "content": "Terms and conditions"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "terms_and_conditions_text",
+      "label": "Text"
+    }
+  ]
+}
+{% endschema %}

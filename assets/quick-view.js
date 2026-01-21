@@ -14,12 +14,14 @@ const QUICK_VIEW_SELECTORS = {
   quickViewOptionInput: ".js-quick-view-input",
   quickViewForm: ".js-quick-view-form",
   quickViewAddToCart: ".js-quick-add-to-cart",
+  miniCart: ".js-mini-cart",
 };
 
 const QUICK_VIEW_CLASSES = {
   closeBtn: "modal__close-button",
   show: "show",
   disabled: "is-disabled",
+  active: "is-active",
 };
 
 function QuickViewInit() {
@@ -97,6 +99,7 @@ function QuickViewInit() {
     if (!submitter) return;
 
     const formData = new FormData(form);
+
     handleAddToCart(submitter, formData);
   }
 
@@ -108,14 +111,50 @@ function QuickViewInit() {
 
     try {
       await addItemToCart(variantId, variantQuantity);
-      dispatchCartUpdate(variantId, variantQuantity);
+
+      updateMiniCartBubble();
+
       showCartNotification("Added to cart");
+
+      updateMiniCartSection();
     } catch (error) {
       showCartNotification(error.message, true);
+
+      updateMiniCartBubble();
+
+      updateMiniCartSection();
     } finally {
-      document.dispatchEvent(new CustomEvent(CART_EVENTS.update, { bubbles: true, detail: { data: {} } }));
+      document.dispatchEvent(new CustomEvent("cart:update", { bubbles: true, detail: { data: {} } }));
       button.disabled = false;
     }
+  }
+
+  function showCartNotification(message, isError = false) {
+    document.querySelectorAll(".cart-notification").forEach((el) => el.remove());
+
+    const notification = document.createElement("div");
+    notification.classList.add("cart-notification");
+    notification.style.background = isError ? "#ef4444" : "#10b981";
+
+    const icon = document.createElement("span");
+    icon.textContent = isError ? "❌" : "✅";
+
+    const text = document.createElement("span");
+    text.textContent = message;
+
+    const progressBar = document.createElement("div");
+    progressBar.classList.add("progress-bar");
+
+    const progress = document.createElement("div");
+    progressBar.appendChild(progress);
+
+    notification.append(icon, text, progressBar);
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+      notification.style.animation = "cartNotificationSlideOut 0.3s ease forwards";
+      setTimeout(() => notification.remove(), 300);
+    }, 1300);
   }
 
   function open(handle) {
@@ -147,12 +186,21 @@ function QuickViewInit() {
     if (!modal) return;
 
     modal.classList.remove(QUICK_VIEW_CLASSES.show);
-    document.body.style.overflow = "";
-    mainSwiper?.destroy(true, true);
-    mainSwiper = null;
+
+    const miniCart = document.querySelector(QUICK_VIEW_SELECTORS.miniCart);
+    const isMiniCartActive = miniCart?.classList.contains(QUICK_VIEW_CLASSES.active);
+
+    if (!isMiniCartActive) {
+      document.body.style.overflow = "";
+    }
+
+    if (mainSwiper) {
+      mainSwiper.destroy(true, true);
+      mainSwiper = null;
+    }
 
     setTimeout(() => {
-      modal.remove();
+      modal?.remove();
       modal = null;
     }, 300);
   }

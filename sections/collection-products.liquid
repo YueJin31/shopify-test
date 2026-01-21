@@ -92,7 +92,7 @@
 
                 <div class="collection-products__item-actions">
                   <button
-                    class="collection-products__item-action js-add-to-cart"
+                    class="collection-products__item-action js-add-to-cart js-collection-products-add-to-cart"
                     aria-label="Add to cart"
                     data-variant-id="{{ product.selected_or_first_available_variant.id }}"
                     data-available-quantity="{{ product.selected_or_first_available_variant.inventory_quantity }}"
@@ -201,10 +201,6 @@
     {% endif %}
   </div>
 </section>
-
-<script src="{{ 'collection-products.js' | asset_url }}" defer></script>
-<script src="{{ 'quick-view.js' | asset_url }}" defer></script>
-<script src="{{ 'add-to-cart.js' | asset_url }}" defer></script>
 
 <link
   rel="stylesheet"

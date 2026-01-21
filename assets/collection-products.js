@@ -5,13 +5,14 @@ const COLLECTION_SELECTORS = {
   productItem: ".js-collection-products-item",
   productPrice: ".js-collection-products-item-price",
   productComparePrice: ".js-collection-products-compare-price",
-  productAddToCart: ".js-add-to-cart",
+  productAddToCart: ".js-collection-products-add-to-cart",
   swatchContainer: ".js-color-swatch",
   swatchItem: ".js-color-swatch-item",
   swiperContainer: ".swiper",
   swiperPagination: ".swiper-pagination",
   swiperPrevBtn: ".swiper-button-prev",
   swiperNextBtn: ".swiper-button-next",
+  empyCartContainer: ".js-mini-cart-empty",
 };
 
 const COLLECTION_CLASSES = {
@@ -82,10 +83,16 @@ function updateProductUI(productItem, { variantPrice, variantComparePrice, varia
 }
 
 function initSwiper(block) {
-  const swiperEl = block.querySelector(COLLECTION_SELECTORS.swiperContainer);
+  const { swiperContainer, productItem, empyCartContainer } = COLLECTION_SELECTORS;
+
+  const swiperEl = block.querySelector(swiperContainer);
   if (!swiperEl) return;
 
-  const slidesCount = swiperEl.querySelectorAll(COLLECTION_SELECTORS.productItem).length;
+  const isEmptyCart = swiperEl.closest(empyCartContainer);
+
+  if (isEmptyCart) return;
+
+  const slidesCount = swiperEl.querySelectorAll(productItem).length;
 
   new Swiper(swiperEl, {
     slidesPerView: 2,

@@ -1,15 +1,12 @@
 const CART_SELECTORS = {
   addToCartBtn: ".js-add-to-cart",
   notificationContainer: ".cart-notification",
+  cartBubble: ".js-mini-cart-bubble",
 };
 
 const CART_CLASSES = {
   notification: "cart-notification",
   progressBar: "progress-bar",
-};
-
-const CART_EVENTS = {
-  update: "cart:update",
 };
 
 function initAddToCart() {
@@ -24,15 +21,18 @@ function initAddToCart() {
 
 async function handleAddToCart(button) {
   const variantId = button.dataset.variantId;
-  const variantQuainity = button.dataset?.variantQuantity;
+  const variantQuantity = button.dataset?.variantQuantity || 1;
 
   button.disabled = true;
 
   try {
-    await addItemToCart(variantId, variantQuainity);
+    await addItemToCart(variantId, variantQuantity);
 
-    dispatchCartUpdate(variantId, variantQuainity);
+    updateMiniCartBubble();
+
     showCartNotification("Added to cart");
+
+    updateMiniCartSection();
   } catch (error) {
     showCartNotification(error.message, true);
   } finally {
@@ -52,21 +52,6 @@ function addItemToCart(variantId, quantity = 1) {
 
     return data;
   });
-}
-
-function dispatchCartUpdate(variantId, variantQuainity = 1) {
-  document.dispatchEvent(
-    new CustomEvent(CART_EVENTS.update, {
-      bubbles: true,
-      detail: {
-        data: {
-          itemCount: variantQuainity,
-          source: "product-form-component",
-          variantId,
-        },
-      },
-    })
-  );
 }
 
 function showCartNotification(message, isError = false) {
