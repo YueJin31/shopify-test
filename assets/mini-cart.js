@@ -149,6 +149,7 @@ const updateMiniCartSection = async (block = document.querySelector(MINI_CART_SE
             initCollectionSwiper(block);
 
             const miniCartCollectionProducts = block?.querySelector(MINI_CART_SELECTORS.collectionProductsContainer);
+
             if (!miniCartCollectionProducts) return;
 
             initSwatches(miniCartCollectionProducts);
@@ -159,6 +160,7 @@ const updateMiniCartSection = async (block = document.querySelector(MINI_CART_SE
     if (errorMessage && line) {
       const item = block.querySelector(`${MINI_CART_SELECTORS.miniCartItem}[data-line="${line}"]`);
       const actions = item?.querySelector(MINI_CART_SELECTORS.miniCartActions);
+
       if (!actions) return;
 
       const errorEl = document.createElement("span");
@@ -243,6 +245,7 @@ function setupAccordion(block) {
 
   const openItem = (item) => {
     const { content } = getParts(item);
+
     if (!content) return;
 
     item.classList.add(MINI_CART_CLASSES.open);
@@ -251,6 +254,7 @@ function setupAccordion(block) {
 
   const closeItem = (item) => {
     const { content } = getParts(item);
+
     if (!content) return;
 
     item.classList.remove(MINI_CART_CLASSES.open);
@@ -274,6 +278,7 @@ function setupAccordion(block) {
 
   items.forEach((item) => {
     const { header } = getParts(item);
+
     if (!header) return;
 
     header.addEventListener("click", () => toggleItem(item));
@@ -350,27 +355,6 @@ async function handleAddToMiniCart(button) {
     hideLoader(block);
     button.disabled = false;
   }
-}
-
-function addItemToCart(variantId, quantity = 1) {
-  return fetch(`${window.Shopify.routes.root}cart/add.js`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({
-      items: [{ id: variantId, quantity }],
-    }),
-  }).then(async (response) => {
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || "Cart add request failed");
-    }
-
-    return data;
-  });
 }
 
 function initMiniCart(block) {

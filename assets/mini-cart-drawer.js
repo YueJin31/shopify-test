@@ -1,4 +1,3 @@
-
 const MINI_CART_DRAWER_SELECTORS = {
   miniCartSection: ".js-mini-cart",
   miniCartSectionInner: ".js-mini-cart-inner",
@@ -57,6 +56,7 @@ const closeMiniCart = () => {
 const miniCartDrawer = () => {
   document.addEventListener("click", (e) => {
     const cart = getMiniCart();
+
     if (!cart) return;
 
     const openBtn = e.target.closest(MINI_CART_DRAWER_SELECTORS.miniCartButton);
