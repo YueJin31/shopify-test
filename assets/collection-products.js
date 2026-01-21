@@ -12,7 +12,7 @@ const COLLECTION_SELECTORS = {
   swiperPagination: ".swiper-pagination",
   swiperPrevBtn: ".swiper-button-prev",
   swiperNextBtn: ".swiper-button-next",
-  empyCartContainer: ".js-mini-cart-empty",
+  emptyCartContainer: ".js-mini-cart-empty",
 };
 
 const COLLECTION_CLASSES = {
@@ -83,12 +83,12 @@ function updateProductUI(productItem, { variantPrice, variantComparePrice, varia
 }
 
 function initSwiper(block) {
-  const { swiperContainer, productItem, empyCartContainer } = COLLECTION_SELECTORS;
+  const { swiperContainer, productItem, emptyCartContainer } = COLLECTION_SELECTORS;
 
   const swiperEl = block.querySelector(swiperContainer);
   if (!swiperEl) return;
 
-  const isEmptyCart = swiperEl.closest(empyCartContainer);
+  const isEmptyCart = swiperEl.closest(emptyCartContainer);
 
   if (isEmptyCart) return;
 

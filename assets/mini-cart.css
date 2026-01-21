@@ -99,11 +99,19 @@
     border: 1px solid var(--light-gray);
     background: var(--white);
     width: 40px;
-    height: 40px;
+    aspect-ratio: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+
+    &::before {
+      content: "";
+      width: 16px;
+      aspect-ratio: 1;
+      background: url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M12 4L4 12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 4L12 12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat;
+      background-size: contain;
+    }
   }
 
   .mini-cart__header-title {
@@ -149,7 +157,7 @@
     .swiper-button-prev {
       position: relative;
       width: 40px;
-      height: 40px;
+      aspect-ratio: 1;
       border-radius: 8px;
       border: 1px solid var(--light-gray);
       margin: 0;
@@ -164,7 +172,7 @@
       &::before {
         content: "";
         width: 16px;
-        height: 16px;
+        aspect-ratio: 1;
         display: block;
         background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5.93994 13.28L10.2866 8.9333C10.7999 8.41997 10.7999 7.57997 10.2866 7.06664L5.93994 2.71997" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat;
         background-size: contain;
@@ -233,7 +241,7 @@
 
   .mini-cart__empty-image-wrapper {
     width: 80px;
-    height: 80px;
+    aspect-ratio: 1;
     border-radius: 40px;
     background: var(--lighter-gray);
     display: flex;
@@ -244,14 +252,6 @@
   .mini-cart__empty-image {
     max-width: 32px;
     object-fit: contain;
-  }
-
-  .mini-cart__empty-promo-products-header {
-    justify-content: space-between;
-  }
-
-  .mini-cart__empty-promo-products-title {
-    font-size: 18px;
   }
 
   .mini-cart__item,
@@ -389,7 +389,6 @@
     display: flex;
     align-items: center;
     color: var(--black);
-
     gap: 12px;
 
     a {
@@ -404,7 +403,7 @@
 
   .mini-cart__terms-conditions-input {
     width: 24px;
-    height: 24px;
+    aspect-ratio: 1;
     border-radius: 4px;
     background: var(--yellow);
     cursor: pointer;
@@ -417,7 +416,7 @@
     &::before {
       content: "";
       width: 16px;
-      height: 16px;
+      aspect-ratio: 1;
       transform: scale(0);
       transition: transform 0.1s ease-in-out;
       background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>') no-repeat;
@@ -433,7 +432,6 @@
   .mini-cart__checkout {
     font-weight: 500;
     font-size: 16px;
-    padding: 16px 32px;
     width: 100%;
     border-radius: 32px;
   }
@@ -453,7 +451,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 15px;
+    gap: 10px;
     margin-top: 8px;
     color: var(--black);
     flex-wrap: wrap;
@@ -464,22 +462,13 @@
     transition: opacity 0.3s ease;
     color: var(--red);
     font-size: 12px;
-    position: absolute;
-    display: inline-block;
-    bottom: -20px;
-    right: 0;
 
     &.is-visible {
       opacity: 1;
     }
-
-    @media screen and (max-width: 767px) {
-      left: 0;
-      right: unset;
-    }
   }
 
-  .mini-cart__item-price span {
+  .mini-cart__item-price {
     font-weight: 500;
   }
 
@@ -696,7 +685,7 @@
     transform: translate(-50%, -50%);
     z-index: 10;
     width: 50px;
-    height: 50px;
+    aspect-ratio: 1;
     border: 4px solid var(--white);
     border-top-color: var(--black);
     border-radius: 50%;
@@ -719,6 +708,10 @@
     svg {
       width: 16px;
       height: unset;
+
+      path {
+        transition: transform 0.3s ease;
+      }
     }
 
     &:hover {
@@ -727,22 +720,13 @@
       }
     }
   }
-
-  .mini-cart__remove-button-svg {
-    width: 100%;
-    height: 100%;
-
-    path {
-      transition: transform 0.3s ease;
-    }
-  }
 }
 
 .mini-cart__button {
   background: none;
   border: none;
   width: 44px;
-  height: 44px;
+  aspect-ratio: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -752,7 +736,7 @@
   &::after {
     content: "";
     width: 22px;
-    height: 22px;
+    aspect-ratio: 1;
     background: url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="22px" height="22px" viewBox="0 0 22 22" version="1.1" ><path style=" stroke:none;fill-rule:nonzero;fill:rgb(0%,0%,0%);fill-opacity:1;" d="M 12.945312 10.121094 L 14.191406 11.363281 C 14.363281 11.535156 14.363281 11.816406 14.191406 11.988281 C 14.019531 12.160156 13.734375 12.160156 13.5625 11.988281 L 12.320312 10.746094 L 11.074219 11.988281 C 10.902344 12.160156 10.621094 12.160156 10.449219 11.988281 C 10.277344 11.816406 10.277344 11.535156 10.449219 11.363281 L 11.703125 10.121094 L 10.449219 8.875 C 10.277344 8.703125 10.277344 8.421875 10.449219 8.25 C 10.621094 8.078125 10.902344 8.078125 11.074219 8.25 L 12.320312 9.496094 L 13.5625 8.25 C 13.734375 8.078125 14.019531 8.078125 14.191406 8.25 C 14.363281 8.421875 14.363281 8.703125 14.191406 8.875 Z M 6.59375 14.421875 C 6.574219 14.375 6.550781 14.320312 6.539062 14.265625 L 4.882812 6.351562 C 4.867188 6.332031 4.859375 6.304688 4.855469 6.285156 L 4.0625 3.519531 L 2.199219 3.519531 C 1.960938 3.519531 1.761719 3.320312 1.761719 3.078125 C 1.761719 2.839844 1.960938 2.640625 2.199219 2.640625 L 4.730469 2.640625 L 5.492188 5.3125 C 5.515625 5.308594 5.535156 5.300781 5.554688 5.300781 C 5.617188 5.285156 5.679688 5.28125 5.742188 5.28125 L 19.800781 5.28125 C 20.289062 5.28125 20.679688 5.671875 20.679688 6.160156 C 20.679688 6.222656 20.671875 6.277344 20.660156 6.332031 L 19.207031 13.523438 C 19.125 13.90625 18.804688 14.195312 18.40625 14.222656 L 7.460938 14.960938 C 7.410156 14.96875 7.355469 14.96875 7.308594 14.960938 L 6.867188 15.839844 L 18.460938 15.839844 C 18.699219 15.839844 18.898438 16.039062 18.898438 16.28125 C 18.898438 16.519531 18.699219 16.71875 18.460938 16.71875 L 6.152344 16.71875 C 5.828125 16.71875 5.617188 16.375 5.761719 16.082031 Z M 5.742188 6.160156 L 7.40625 14.085938 L 18.34375 13.34375 L 19.800781 6.160156 Z M 7.914062 18.921875 C 7.425781 18.921875 7.03125 18.527344 7.03125 18.039062 C 7.03125 17.550781 7.425781 17.160156 7.914062 17.160156 C 8.394531 17.160156 8.792969 17.550781 8.792969 18.039062 C 8.792969 18.527344 8.394531 18.921875 7.914062 18.921875 Z M 17.578125 18.921875 C 17.089844 18.921875 16.699219 18.527344 16.699219 18.039062 C 16.699219 17.550781 17.089844 17.160156 17.578125 17.160156 C 18.066406 17.160156 18.460938 17.550781 18.460938 18.039062 C 18.460938 18.527344 18.066406 18.921875 17.578125 18.921875 Z M 17.578125 18.921875 "/><path style=" stroke:none;fill-rule:nonzero;fill:rgb(100%,100%,100%);fill-opacity:1;" d="M 9.488281 7.128906 L 15.96875 7.128906 L 15.96875 12.691406 L 9.488281 12.691406 Z M 9.488281 7.128906 "/></svg>')
       no-repeat;
     background-size: contain;
@@ -760,7 +744,7 @@
 }
 
 .mini-cart__bubble {
-  width: 20px;
+  width: 18px;
   aspect-ratio: 1;
   border-radius: 50%;
   display: flex;
@@ -769,7 +753,7 @@
   position: absolute;
   background: var(--black);
   color: var(--white);
-  font-size: 10px;
+  font-size: 9px;
   top: 5px;
   right: 0;
 }
