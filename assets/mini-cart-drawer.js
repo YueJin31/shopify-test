@@ -11,11 +11,6 @@ const MINI_CART_DRAWER_CLASSES = {
   active: "is-active",
 };
 
-const fetchCart = async () => {
-  const res = await fetch("/cart.js");
-  return res.json();
-};
-
 const updateMiniCartBubble = async () => {
   const bubble = document.querySelector(MINI_CART_DRAWER_SELECTORS.miniCartBubble);
 
