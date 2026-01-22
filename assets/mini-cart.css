@@ -155,7 +155,7 @@
     .swiper-button-prev {
       position: relative;
       width: 40px;
-      aspect-ratio: 1;
+      height: 40px;
       border-radius: 8px;
       border: 1px solid var(--light-gray);
       margin: 0;
