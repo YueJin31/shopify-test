@@ -33,7 +33,7 @@
   assign terms_and_conditions_text = section.settings.terms_and_conditions_text
 %}
 
-<section class="mini-cart js-mini-cart" data-section-id="{{ section.id }}">
+<section class="mini-cart js-mini-cart">
   <div class="mini-cart__inner js-mini-cart-inner">
     {% form 'cart', cart, class: 'mini-cart__form' %}
       <div class="mini-cart__header">
