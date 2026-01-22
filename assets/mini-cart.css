@@ -131,6 +131,10 @@
       padding: 0 24px 24px;
       margin-top: 24px;
     }
+
+    + .mini-cart__footer {
+      border: none;
+    }
   }
 
   .mini-cart__upsell-products {
