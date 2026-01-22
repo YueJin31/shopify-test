@@ -85,8 +85,6 @@
 
   .mini-cart__promo-icon {
     max-width: 24px;
-    width: 100%;
-    height: 100%;
     aspect-ratio: 1;
     object-fit: contain;
   }
@@ -221,6 +219,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center;
   }
 
   .mini-cart__empty-title {
@@ -229,14 +228,12 @@
     line-height: 1.5;
     color: var(--black);
     margin-bottom: 0;
-    text-align: center;
   }
 
   .mini-cart__empty-text {
     margin-top: 12px;
     color: var(--gray);
     font-size: 12px;
-    text-align: center;
   }
 
   .mini-cart__empty-image-wrapper {
