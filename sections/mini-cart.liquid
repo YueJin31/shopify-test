@@ -285,7 +285,9 @@
         {% endif %}
 
         {% if free_shipping_amount != blank %}
-          {% assign free_shipping_amount_formatted = free_shipping_amount | money %}
+          {% assign free_shipping_amount_cents = free_shipping_amount | times: 100 %}
+
+          {% assign free_shipping_amount_formatted = free_shipping_amount_cents | money %}
           {% assign free_shipping_amount_html = '<span class="mini-cart__free-shipping-amount">'
             | append: free_shipping_amount_formatted
             | append: '</span>'
@@ -293,7 +295,7 @@
 
           {% assign subtotal = cart.items_subtotal_price %}
 
-          {% if subtotal >= free_shipping_amount %}
+          {% if subtotal >= free_shipping_amount_cents %}
             {% assign progress_percent = 100 %}
             {% assign message_with_amount = free_shipping_congratulatory_message %}
 
@@ -302,7 +304,7 @@
               | append: '</p>'
             %}
           {% else %}
-            {% assign progress_percent = subtotal | times: 100 | divided_by: free_shipping_amount %}
+            {% assign progress_percent = subtotal | times: 100 | divided_by: free_shipping_amount_cents %}
             {% assign message_with_amount = free_shipping_message | replace: '{amount}', free_shipping_amount_html %}
           {% endif %}
 
