@@ -22,7 +22,7 @@ const BESTSELLERS_CLASSES = {
   active: "is-active",
 };
 
-function createModal(title) {
+export function createModal(title) {
   const modal = document.createElement("div");
   modal.classList.add(MODAL_CLASSES.modal);
 
@@ -55,7 +55,7 @@ function createModal(title) {
   });
 }
 
-function removeModal(modal) {
+export function removeModal(modal) {
   modal.classList.remove(MODAL_CLASSES.show);
   document.body.style.overflow = "";
 

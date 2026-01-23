@@ -9,13 +9,19 @@
   pointer-events: none;
   transform: scale(1.1);
   z-index: 9999;
-  transition: visibility 0s linear 0.25s, opacity 0.25s 0s, transform 0.25s;
+  transition:
+    visibility 0s linear 0.25s,
+    opacity 0.25s 0s,
+    transform 0.25s;
 
   &.show {
     opacity: 1;
     visibility: visible;
     transform: scale(1);
-    transition: visibility 0s linear 0s, opacity 0.25s 0s, transform 0.25s;
+    transition:
+      visibility 0s linear 0s,
+      opacity 0.25s 0s,
+      transform 0.25s;
     pointer-events: all;
   }
 }
