@@ -120,8 +120,6 @@ function QuickViewInit() {
     } catch (error) {
       showCartNotification(error.message, true);
 
-      updateMiniCartBubble();
-
       updateMiniCartSection();
     } finally {
       document.dispatchEvent(new CustomEvent("cart:update", { bubbles: true, detail: { data: {} } }));
