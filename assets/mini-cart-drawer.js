@@ -11,66 +11,51 @@ const MINI_CART_DRAWER_CLASSES = {
   active: "is-active",
 };
 
+const getCart = () => document.querySelector(MINI_CART_DRAWER_SELECTORS.miniCartSection);
+const getBubble = () => document.querySelector(MINI_CART_DRAWER_SELECTORS.miniCartBubble);
+
+const setMiniCartState = (isOpen) => {
+  const cart = getCart();
+
+  if (!cart) return;
+
+  cart.classList.toggle(MINI_CART_DRAWER_CLASSES.active, isOpen);
+  document.body.style.overflow = isOpen ? "hidden" : "";
+};
+
 const updateMiniCartBubble = async () => {
-  const bubble = document.querySelector(MINI_CART_DRAWER_SELECTORS.miniCartBubble);
+  const bubble = getBubble();
 
   if (!bubble) return;
 
   try {
-    const response = await fetch("/cart.js");
-    const cart = await response.json();
+    const res = await fetch("/cart.js");
+    const { item_count = 0 } = await res.json();
 
-    const count = cart.item_count ?? 0;
-
-    bubble.textContent = count;
-  } catch (error) {
-    console.error(error);
+    bubble.textContent = item_count;
+  } catch (err) {
+    console.error("Mini cart bubble error:", err);
   }
-};
-
-const getMiniCart = () => document.querySelector(MINI_CART_DRAWER_SELECTORS.miniCartSection);
-
-const openMiniCart = () => {
-  const cart = getMiniCart();
-
-  if (!cart) return;
-
-  cart.classList.add(MINI_CART_DRAWER_CLASSES.active);
-  document.body.style.overflow = "hidden";
-};
-
-const closeMiniCart = () => {
-  const cart = getMiniCart();
-
-  if (!cart) return;
-
-  cart.classList.remove(MINI_CART_DRAWER_CLASSES.active);
-  document.body.style.overflow = "";
 };
 
 const miniCartDrawer = () => {
   document.addEventListener("click", (e) => {
-    const cart = getMiniCart();
+    const cart = getCart();
 
     if (!cart) return;
 
-    const openBtn = e.target.closest(MINI_CART_DRAWER_SELECTORS.miniCartButton);
-    const closeBtn = e.target.closest(MINI_CART_DRAWER_SELECTORS.miniCartCloseBtn);
-    const isClickInsideCart = e.target.closest(MINI_CART_DRAWER_SELECTORS.miniCartSectionInner);
-    const isClickQuickView = e.target.closest(MINI_CART_DRAWER_SELECTORS.miniCartQuickView);
+    const isOpenBtn = e.target.closest(MINI_CART_DRAWER_SELECTORS.miniCartButton);
+    const isCloseBtn = e.target.closest(MINI_CART_DRAWER_SELECTORS.miniCartCloseBtn);
+    const isInsideCart = e.target.closest(MINI_CART_DRAWER_SELECTORS.miniCartSectionInner);
+    const isQuickView = e.target.closest(MINI_CART_DRAWER_SELECTORS.miniCartQuickView);
+    const isCartOpen = cart.classList.contains(MINI_CART_DRAWER_CLASSES.active);
 
-    if (openBtn) {
-      openMiniCart();
-      return;
-    }
+    if (isOpenBtn) return setMiniCartState(true);
 
-    if (closeBtn) {
-      closeMiniCart();
-      return;
-    }
+    if (isCloseBtn) return setMiniCartState(false);
 
-    if (cart.classList.contains(MINI_CART_DRAWER_CLASSES.active) && !isClickInsideCart && !isClickQuickView) {
-      closeMiniCart();
+    if (isCartOpen && !isInsideCart && !isQuickView) {
+      setMiniCartState(false);
     }
   });
 };
