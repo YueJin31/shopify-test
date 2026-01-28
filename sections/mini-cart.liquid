@@ -39,7 +39,8 @@
       <div class="mini-cart__header">
         {% if cart_heading != blank %}
           <h4 class="mini-cart__header-title">
-            {{ cart_heading | append: ' (' | append: cart.item_count | append: ')' }}
+            {{ cart_heading }}
+            <span>({{ cart.item_count }})</span>
           </h4>
         {% endif %}
 
@@ -47,7 +48,7 @@
       </div>
 
       {% if cart.item_count > 0 %}
-        {% if promo_message_text != blank or promo_message_icon != blank %}
+        {% if promo_message_text != blank %}
           <div
             class="mini-cart__promo"
             {% if promo_message_background != 'rgba(0,0,0,0)' %}
@@ -60,7 +61,7 @@
                 src="{{ promo_message_icon | image_url: width: 24 }}"
                 srcset="
                   {{ promo_message_icon | image_url: width: 24 }} 1x,
-                  {{ promo_message_icon | image_url: width: 50 }} 2x
+                  {{ promo_message_icon | image_url: width: 48 }} 2x
                 "
                 alt="{{ promo_message_icon.alt | escape }}"
                 width="24"
@@ -68,16 +69,14 @@
               >
             {% endif %}
 
-            {% if promo_message_text != blank %}
-              <p
-                class="mini-cart__promo-text"
-                {% if promo_message_color != 'rgba(0,0,0,0)' %}
-                  style="color:{{ promo_message_color }}"
-                {% endif %}
-              >
-                {{ promo_message_text }}
-              </p>
-            {% endif %}
+            <p
+              class="mini-cart__promo-text"
+              {% if promo_message_color != 'rgba(0,0,0,0)' %}
+                style="color:{{ promo_message_color }}"
+              {% endif %}
+            >
+              {{ promo_message_text }}
+            </p>
           </div>
         {% endif %}
 
@@ -100,6 +99,7 @@
                       alt="{{ item.title | escape }}"
                       width="100"
                       height="100"
+                      loading="lazy"
                     >
                   </a>
                 </div>
@@ -112,30 +112,34 @@
               {% endif %}
 
               <div class="mini-cart__item-info">
-                <button class="mini-cart__remove-button js-mini-cart-remove-btn" type="button" aria-label="Remove Item">
-                  <svg
-                    class="mini-cart__remove-button-svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
+                <div class="mini-cart__item-header">
+                  <a class="mini-cart__item-title" href="{{ item.url }}">{{ item.product.title }}</a>
+
+                  <button
+                    class="mini-cart__remove-button js-mini-cart-remove-btn"
+                    type="button"
+                    aria-label="Remove Item"
                   >
-                    <path class="mini-cart__remove-button-svg-cover" d="M14 3.98665C11.78 3.76665 9.54667 3.65332 7.32 3.65332C6 3.65332 4.68 3.71999 3.36 3.85332L2 3.98665" stroke="#9D9D9D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path class="mini-cart__remove-button-svg-cover" d="M5.66675 3.31337L5.81341 2.44004C5.92008 1.80671 6.00008 1.33337 7.12675 1.33337H8.87341C10.0001 1.33337 10.0867 1.83337 10.1867 2.44671L10.3334 3.31337" stroke="#9D9D9D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M12.5667 6.09338L12.1334 12.8067C12.06 13.8534 12 14.6667 10.14 14.6667H5.86002C4.00002 14.6667 3.94002 13.8534 3.86668 12.8067L3.43335 6.09338" stroke="#9D9D9D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M6.88672 11H9.10672" stroke="#9D9D9D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M6.33325 8.33337H9.66659" stroke="#9D9D9D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
+                    <svg
+                      class="mini-cart__remove-button-svg"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path class="mini-cart__remove-button-svg-cover" d="M14 3.98665C11.78 3.76665 9.54667 3.65332 7.32 3.65332C6 3.65332 4.68 3.71999 3.36 3.85332L2 3.98665" stroke="#9D9D9D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path class="mini-cart__remove-button-svg-cover" d="M5.66675 3.31337L5.81341 2.44004C5.92008 1.80671 6.00008 1.33337 7.12675 1.33337H8.87341C10.0001 1.33337 10.0867 1.83337 10.1867 2.44671L10.3334 3.31337" stroke="#9D9D9D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M12.5667 6.09338L12.1334 12.8067C12.06 13.8534 12 14.6667 10.14 14.6667H5.86002C4.00002 14.6667 3.94002 13.8534 3.86668 12.8067L3.43335 6.09338" stroke="#9D9D9D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M6.88672 11H9.10672" stroke="#9D9D9D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M6.33325 8.33337H9.66659" stroke="#9D9D9D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
 
-                <a href="{{ item.url }}">
-                  <h3 class="mini-cart__item-title">{{ item.product.title }}</h3>
-                </a>
-
-                {% if item.variant.title != 'Default Title' %}
+                {% unless item.product.has_only_default_variant %}
                   <p class="mini-cart__item-variant-title">{{ item.variant.title }}</p>
-                {% endif %}
+                {% endunless %}
 
                 <div class="mini-cart__actions js-mini-cart-actions">
                   <div class="mini-cart__quantity js-mini-cart-quantity">
@@ -152,7 +156,6 @@
                     <input
                       type="number"
                       name="quantity"
-                      data-quantity="{{ item.quantity }}"
                       value="{{ item.quantity }}"
                       min="1"
                       class="mini-cart__quantity-input js-mini-cart-quantity-input"
@@ -189,10 +192,16 @@
           {% endfor %}
         </div>
 
-        {% if upsell_products_heading != blank and upsell_products_items %}
+        {% if upsell_products_items != blank %}
+          {%- assign added_products = cart.items | map: 'product_id' -%}
+
           <div class="mini-cart__upsell-products js-upsell-products">
             <div class="mini-cart__upsell-products-header">
-              <p class="mini-cart__upsell-products-title">{{ upsell_products_heading }}</p>
+              {% if upsell_products_heading != blank %}
+                <p class="mini-cart__upsell-products-title">
+                  {{ upsell_products_heading }}
+                </p>
+              {% endif %}
 
               <div class="mini-cart__upsell-products-navigation">
                 <div class="swiper-button-prev"></div>
@@ -203,18 +212,9 @@
             <div class="mini-cart__upsell-products__list swiper js-upsell-swiper">
               <div class="swiper-wrapper">
                 {% for item in upsell_products_items %}
-                  {% assign is_in_cart = false %}
-
-                  {% for cart_item in cart.items %}
-                    {% if cart_item.product.id == item.id %}
-                      {% assign is_in_cart = true %}
-                      {% break %}
-                    {% endif %}
-                  {% endfor %}
-
-                  {% if is_in_cart %}
+                  {%- if added_products contains item.id -%}
                     {% continue %}
-                  {% endif %}
+                  {%- endif -%}
 
                   <div class="mini-cart__upsell-products__item swiper-slide">
                     {% if item.featured_image != blank %}
@@ -230,6 +230,7 @@
                             alt="{{ item.title | escape }}"
                             width="80"
                             height="80"
+                            loading="lazy"
                           >
                         </a>
                       </div>
@@ -242,14 +243,16 @@
                     {% endif %}
 
                     <div class="mini-cart__item-info">
-                      <a href="{{ item.url }}">
-                        <h3 class="mini-cart__item-title">{{ item.title }}</h3>
+                      <a class="mini-cart__item-title" href="{{ item.url }}">
+                        {{ item.title }}
                       </a>
 
                       <div class="mini-cart__actions js-mini-cart-actions">
                         <div class="mini-cart__item-price-container">
                           <div class="mini-cart__item-price">
-                            <span>{{ item.selected_or_first_available_variant.price | money }}</span>
+                            <span>
+                              {{ item.selected_or_first_available_variant.price | money }}
+                            </span>
                           </div>
 
                           {% if item.selected_or_first_available_variant.compare_at_price
@@ -286,24 +289,25 @@
 
         {% if free_shipping_amount != blank %}
           {% assign free_shipping_amount_cents = free_shipping_amount | times: 100 %}
-
-          {% assign free_shipping_amount_formatted = free_shipping_amount_cents | money %}
-          {% assign free_shipping_amount_html = '<span class="mini-cart__free-shipping-amount">'
-            | append: free_shipping_amount_formatted
-            | append: '</span>'
-          %}
-
           {% assign subtotal = cart.items_subtotal_price %}
 
           {% if subtotal >= free_shipping_amount_cents %}
             {% assign progress_percent = 100 %}
-            {% assign message_with_amount = free_shipping_congratulatory_message %}
 
+            {% assign message_with_amount = free_shipping_congratulatory_message %}
             {% assign message_with_amount = '<p class="mini-cart__free-shipping-congratulatory">'
               | append: message_with_amount
               | append: '</p>'
             %}
           {% else %}
+            {% assign remaining_amount = free_shipping_amount_cents | minus: subtotal %}
+            {% assign remaining_amount_formatted = remaining_amount | money %}
+
+            {% assign free_shipping_amount_html = '<span class="mini-cart__free-shipping-amount">'
+              | append: remaining_amount_formatted
+              | append: '</span>'
+            %}
+
             {% assign progress_percent = subtotal | times: 100 | divided_by: free_shipping_amount_cents %}
             {% assign message_with_amount = free_shipping_message | replace: '{amount}', free_shipping_amount_html %}
           {% endif %}
@@ -320,7 +324,7 @@
               <span
                 class="mini-cart__fre-shipping-progress-line"
                 style="width: {{ progress_percent }}%; background: {{ free_shipping_progress_bar_color }};"
-                title="{{ progress_percent | append: "%" }}"
+                title="{{ progress_percent }}%"
               ></span>
             </div>
           </div>
@@ -361,7 +365,7 @@
         <div class="mini-cart__footer">
           <div class="mini-cart__subtotal">
             Subtotal:
-            <span class="mini-cart__subtotal-price js-mini-cart-subtotal">{{ cart.items_subtotal_price | money }}</span>
+            <span class="mini-cart__subtotal-price js-mini-cart-subtotal">{{ cart.total_price | money }}</span>
           </div>
 
           <p class="mini-cart__tax-text">Tax included and shipping calculated at checkout</p>
@@ -420,7 +424,7 @@
               {% endif %}
             </div>
 
-            {% if empty_cart_promo_products %}
+            {% if empty_cart_promo_products != blank %}
               <div class="mini-cart__empty-promo-products">
                 <div class="js-collection-products">
                   <div class="mini-cart__empty-promo-products-header">
@@ -432,10 +436,10 @@
                     </div>
                   </div>
 
-                  <div class="collection-products__list swiper js-collection-products-swiper">
+                  <div class="collection-products__list swiper js-mini-cart-promo-products-swiper">
                     <div class="swiper-wrapper">
                       {% for product in empty_cart_promo_products %}
-                        <div class="collection-products__item swiper-slide js-collection-products-item">
+                        <div class="collection-products__item swiper-slide js-mini-cart-promo-products-item">
                           <div class="collection-products__item-image-wrapper">
                             {% if product.tags.size > 0 %}
                               <div class="collection-products__item-tags">

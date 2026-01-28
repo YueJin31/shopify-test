@@ -17,9 +17,9 @@ const MINI_CART_SELECTORS = {
   upsellSwiper: ".js-upsell-swiper",
   upsellAddToCart: ".js-mini-cart-add-to-cart",
 
-  collectionProductsContainer: ".js-collection-products",
-  collectionProductsSwiper: ".js-collection-products-swiper",
-  collectionProductsItem: ".js-collection-products-item",
+  promoProductsContainer: ".js-collection-products",
+  promoProductsSwiper: ".js-mini-cart-promo-products-swiper",
+  promoProductsItem: ".js-mini-cart-promo-products-item",
 
   miniCartTermsInput: ".js-mini-cart-terms-checkbox",
 
@@ -37,7 +37,6 @@ const MINI_CART_SELECTORS = {
 const MINI_CART_CLASSES = {
   error: "mini-cart__error-message",
   visible: "is-visible",
-  disable: "is-disabled",
   loading: "mini-cart--loading",
   loader: "mini-cart__loader",
   spinner: "mini-cart__spinner",
@@ -146,9 +145,9 @@ const updateMiniCartSection = async (block = document.querySelector(MINI_CART_SE
           updateNoteLabel(block);
 
           if (block.querySelector(MINI_CART_SELECTORS.miniCartEmptyLayout)) {
-            initCollectionSwiper(block);
+            initPromoSwiper(block);
 
-            const miniCartCollectionProducts = block?.querySelector(MINI_CART_SELECTORS.collectionProductsContainer);
+            const miniCartCollectionProducts = block?.querySelector(MINI_CART_SELECTORS.promoProductsContainer);
 
             if (!miniCartCollectionProducts) return;
 
@@ -217,7 +216,7 @@ function updateMinusButtonState(container, currentValue) {
 
   if (!minusButton) return;
 
-  currentValue < 2 ? minusButton.classList.add(MINI_CART_CLASSES.disable) : minusButton.classList.remove(MINI_CART_CLASSES.disable);
+  currentValue < 2 ? (minusButton.disabled = true) : (minusButton.disabled = false);
 }
 
 function initMinusButtonsState(block) {
@@ -299,20 +298,20 @@ function initUpsellSwiper(block) {
   });
 }
 
-function initCollectionSwiper(block) {
-  const swiperEl = block.querySelector(MINI_CART_SELECTORS.collectionProductsSwiper);
+function initPromoSwiper(block) {
+  const swiperEl = block.querySelector(MINI_CART_SELECTORS.promoProductsSwiper);
 
   if (!swiperEl) return;
 
-  const slidesCount = swiperEl.querySelectorAll(MINI_CART_SELECTORS.collectionProductsItem).length;
+  const slidesCount = swiperEl.querySelectorAll(MINI_CART_SELECTORS.promoProductsItem).length;
 
   new Swiper(swiperEl, {
     slidesPerView: 2,
     spaceBetween: 16,
     loop: slidesCount > 3,
     navigation: {
-      nextEl: swiperEl.closest(MINI_CART_SELECTORS.collectionProductsContainer).querySelector(MINI_CART_SELECTORS.swiperNextBtn),
-      prevEl: swiperEl.closest(MINI_CART_SELECTORS.collectionProductsContainer).querySelector(MINI_CART_SELECTORS.swiperPrevBtn),
+      nextEl: swiperEl.closest(MINI_CART_SELECTORS.promoProductsContainer).querySelector(MINI_CART_SELECTORS.swiperNextBtn),
+      prevEl: swiperEl.closest(MINI_CART_SELECTORS.promoProductsContainer).querySelector(MINI_CART_SELECTORS.swiperPrevBtn),
     },
   });
 }
@@ -360,7 +359,7 @@ async function handleAddToMiniCart(button) {
 function initMiniCart(block) {
   initMinusButtonsState(block);
   initUpsellSwiper(block);
-  initCollectionSwiper(block);
+  initPromoSwiper(block);
   setupAccordion(block);
   handleNoteTextArea(block);
 
@@ -429,6 +428,16 @@ function initMiniCart(block) {
   });
 
   block.addEventListener(
+    "focus",
+    (e) => {
+      if (!e.target.matches(MINI_CART_SELECTORS.quantityInput)) return;
+
+      e.target.dataset.prevValue = e.target.value;
+    },
+    true,
+  );
+
+  block.addEventListener(
     "blur",
     (e) => {
       if (!e.target.matches(MINI_CART_SELECTORS.quantityInput)) return;
@@ -440,13 +449,12 @@ function initMiniCart(block) {
       if (!item || !container) return;
 
       const line = +item.dataset.line;
-      const defaultValue = +input.dataset.quantity || 1;
-      const prevQuantity = defaultValue;
+      const prevQuantity = parseInt(input.dataset.prevValue, 10) || 1;
 
       let quantity = parseInt(input.value, 10);
 
       if (!quantity || quantity < 1) {
-        quantity = defaultValue;
+        quantity = prevQuantity;
         input.value = quantity;
       }
 
