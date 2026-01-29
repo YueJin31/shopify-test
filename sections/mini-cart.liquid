@@ -289,7 +289,7 @@
 
         {% if free_shipping_amount != blank %}
           {% assign free_shipping_amount_cents = free_shipping_amount | times: 100 %}
-          {% assign subtotal = cart.items_subtotal_price %}
+          {% assign subtotal = cart.total_price  %}
 
           {% if subtotal >= free_shipping_amount_cents %}
             {% assign progress_percent = 100 %}
