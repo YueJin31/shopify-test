@@ -16,7 +16,6 @@ const MINI_CART_SELECTORS = {
   upsellProductsContainer: ".js-upsell-products",
   upsellSwiper: ".js-upsell-swiper",
   upsellAddToCart: ".js-mini-cart-add-to-cart",
-  upsellProductItem: ".js-mini-cart-upsell-products-item",
 
   promoProductsContainer: ".js-collection-products",
   promoProductsSwiper: ".js-mini-cart-promo-products-swiper",
