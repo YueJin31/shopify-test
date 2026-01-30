@@ -16,6 +16,7 @@ const MINI_CART_SELECTORS = {
   upsellProductsContainer: ".js-upsell-products",
   upsellSwiper: ".js-upsell-swiper",
   upsellAddToCart: ".js-mini-cart-add-to-cart",
+  upsellProductItem: ".js-mini-cart-upsell-products-item",
 
   promoProductsContainer: ".js-collection-products",
   promoProductsSwiper: ".js-mini-cart-promo-products-swiper",
@@ -43,24 +44,15 @@ const MINI_CART_CLASSES = {
   open: "is-open",
 };
 
-const cartUpdateTimers = new Map();
+let miniCartTermsAccepted = false;
 
-function debounceCartUpdate({ block, line, quantity }, delay = 400) {
-  if (cartUpdateTimers.has(line)) {
-    clearTimeout(cartUpdateTimers.get(line));
-  }
+async function updateCart({ block, line, quantity }) {
+  showLoader(block);
 
-  const timer = setTimeout(async () => {
-    showLoader(block);
+  const error = await changeCartItem(line, quantity);
+  await updateMiniCartSection(block, error, line);
 
-    const error = await changeCartItem(line, quantity);
-    await updateMiniCartSection(block, error, line);
-
-    hideLoader(block);
-    cartUpdateTimers.delete(line);
-  }, delay);
-
-  cartUpdateTimers.set(line, timer);
+  hideLoader(block);
 }
 
 const showLoader = (block) => {
@@ -138,11 +130,9 @@ const updateMiniCartSection = async (block = document.querySelector(MINI_CART_SE
         if (newContent) {
           block.innerHTML = newContent.innerHTML;
 
-          initMinusButtonsState(block);
-          setupAccordion(block);
           initUpsellSwiper(block);
-          handleNoteTextArea(block);
           updateNoteLabel(block);
+          restoreTermsState(block);
 
           if (block.querySelector(MINI_CART_SELECTORS.miniCartEmptyLayout)) {
             initPromoSwiper(block);
@@ -158,21 +148,14 @@ const updateMiniCartSection = async (block = document.querySelector(MINI_CART_SE
 
     if (errorMessage && line) {
       const item = block.querySelector(`${MINI_CART_SELECTORS.miniCartItem}[data-line="${line}"]`);
-      const actions = item?.querySelector(MINI_CART_SELECTORS.miniCartActions);
 
-      if (!actions) return;
+      if (!item) return;
 
-      const errorEl = document.createElement("span");
-      errorEl.className = MINI_CART_CLASSES.error;
-      errorEl.textContent = errorMessage;
-      actions.appendChild(errorEl);
-
-      requestAnimationFrame(() => errorEl.classList.add(MINI_CART_CLASSES.visible));
-
-      setTimeout(() => {
-        errorEl.classList.remove(MINI_CART_CLASSES.visible);
-        errorEl.addEventListener("transitionend", () => errorEl.remove(), { once: true });
-      }, 1500);
+      renderMiniCartError({
+        block,
+        anchorEl: item,
+        message: errorMessage,
+      });
     }
   } catch (error) {
     console.error(error);
@@ -211,40 +194,11 @@ function getItemData(target) {
   };
 }
 
-function updateMinusButtonState(container, currentValue) {
-  const minusButton = container.querySelector('[data-action="minus"]');
-
-  if (!minusButton) return;
-
-  currentValue < 2 ? (minusButton.disabled = true) : (minusButton.disabled = false);
-}
-
-function initMinusButtonsState(block) {
-  block.querySelectorAll(MINI_CART_SELECTORS.quantityContainer).forEach((container) => {
-    const input = container.querySelector(MINI_CART_SELECTORS.quantityInput);
-
-    if (!input) return;
-
-    const quantity = parseInt(input.value, 10) || 1;
-    updateMinusButtonState(container, quantity);
-  });
-}
-
 function setupAccordion(block) {
   if (!block) return;
 
-  const items = [...block.querySelectorAll(MINI_CART_SELECTORS.miniCartNoteAccordion)];
-
-  if (!items.length) return;
-
-  const getParts = (item) => ({
-    content: item.querySelector(MINI_CART_SELECTORS.miniCartNoteAccordionContent),
-    header: item.querySelector(MINI_CART_SELECTORS.miniCartNoteAccordionHeader),
-  });
-
   const openItem = (item) => {
-    const { content } = getParts(item);
-
+    const content = item.querySelector(MINI_CART_SELECTORS.miniCartNoteAccordionContent);
     if (!content) return;
 
     item.classList.add(MINI_CART_CLASSES.open);
@@ -252,15 +206,22 @@ function setupAccordion(block) {
   };
 
   const closeItem = (item) => {
-    const { content } = getParts(item);
-
+    const content = item.querySelector(MINI_CART_SELECTORS.miniCartNoteAccordionContent);
     if (!content) return;
 
     item.classList.remove(MINI_CART_CLASSES.open);
     content.style.maxHeight = "0px";
   };
 
-  const toggleItem = (item) => {
+  block.addEventListener("click", (e) => {
+    const header = e.target.closest(MINI_CART_SELECTORS.miniCartNoteAccordionHeader);
+
+    if (!header || !block.contains(header)) return;
+
+    const item = header.closest(MINI_CART_SELECTORS.miniCartNoteAccordion);
+
+    if (!item) return;
+
     const openedItem = block.querySelector(`.${MINI_CART_CLASSES.open}`);
 
     if (item.classList.contains(MINI_CART_CLASSES.open)) {
@@ -273,14 +234,6 @@ function setupAccordion(block) {
     }
 
     openItem(item);
-  };
-
-  items.forEach((item) => {
-    const { header } = getParts(item);
-
-    if (!header) return;
-
-    header.addEventListener("click", () => toggleItem(item));
   });
 }
 
@@ -319,13 +272,11 @@ function initPromoSwiper(block) {
 function handleNoteTextArea(block) {
   if (!block) return;
 
-  const noteTextarea = block.querySelector(MINI_CART_SELECTORS.miniCartNoteAccordionTextarea);
-  if (!noteTextarea) return;
+  block.addEventListener("change", (e) => {
+    const textarea = e.target.closest(MINI_CART_SELECTORS.miniCartNoteAccordionTextarea);
+    if (!textarea || !block.contains(textarea)) return;
 
-  updateNoteLabel(block);
-
-  noteTextarea.addEventListener("change", () => {
-    const note = noteTextarea.value.trim();
+    const note = textarea.value.trim();
 
     updateNoteLabel(block);
     updateCartNote(note);
@@ -349,19 +300,55 @@ async function handleAddToMiniCart(button) {
 
     await updateMiniCartSection(block);
   } catch (error) {
-    console.error(error);
+    renderMiniCartError({
+      block,
+      anchorEl: button,
+      message: error || "Unable to add this item to the cart",
+    });
   } finally {
     hideLoader(block);
     button.disabled = false;
   }
 }
 
+function renderMiniCartError({ block, anchorEl, message }) {
+  if (!block || !anchorEl || !message) return;
+
+  const actions = anchorEl.querySelector(MINI_CART_SELECTORS.miniCartActions) || anchorEl.closest(MINI_CART_SELECTORS.miniCartActions);
+
+  if (!actions) return;
+
+  actions.querySelectorAll(`.${MINI_CART_CLASSES.error}`).forEach((el) => el.remove());
+
+  const errorEl = document.createElement("span");
+  errorEl.className = MINI_CART_CLASSES.error;
+  errorEl.textContent = message;
+
+  actions.appendChild(errorEl);
+
+  requestAnimationFrame(() => {
+    errorEl.classList.add(MINI_CART_CLASSES.visible);
+  });
+}
+
+function restoreTermsState(block) {
+  if (!block) return;
+
+  const termsInput = block.querySelector(MINI_CART_SELECTORS.miniCartTermsInput);
+  const checkoutBtn = block.querySelector(MINI_CART_SELECTORS.miniCartCheckoutBtn);
+
+  if (!termsInput || !checkoutBtn) return;
+
+  termsInput.checked = miniCartTermsAccepted;
+  checkoutBtn.disabled = !miniCartTermsAccepted;
+}
+
 function initMiniCart(block) {
-  initMinusButtonsState(block);
   initUpsellSwiper(block);
   initPromoSwiper(block);
   setupAccordion(block);
   handleNoteTextArea(block);
+  updateNoteLabel(block);
 
   block.addEventListener("click", (e) => {
     const button = e.target.closest(MINI_CART_SELECTORS.upsellAddToCart);
@@ -388,9 +375,7 @@ function initMiniCart(block) {
 
     data.input.value = quantity;
 
-    updateMinusButtonState(container, quantity);
-
-    debounceCartUpdate({
+    updateCart({
       block,
       line: data.line,
       quantity,
@@ -410,7 +395,7 @@ function initMiniCart(block) {
 
     if (!line) return;
 
-    debounceCartUpdate({
+    updateCart({
       block,
       line,
       quantity: 0,
@@ -419,12 +404,14 @@ function initMiniCart(block) {
 
   block.addEventListener("change", (e) => {
     const termsInput = e.target.closest(MINI_CART_SELECTORS.miniCartTermsInput);
+
     if (!termsInput) return;
 
-    const checkoutBtn = block.querySelector(MINI_CART_SELECTORS.miniCartCheckoutBtn);
-    if (!checkoutBtn) return;
+    miniCartTermsAccepted = termsInput.checked;
 
-    checkoutBtn.disabled = !termsInput.checked;
+    const checkoutBtn = block.querySelector(MINI_CART_SELECTORS.miniCartCheckoutBtn);
+
+    if (checkoutBtn) checkoutBtn.disabled = !miniCartTermsAccepted;
   });
 
   block.addEventListener(
@@ -438,7 +425,7 @@ function initMiniCart(block) {
   );
 
   block.addEventListener(
-    "blur",
+    "change",
     (e) => {
       if (!e.target.matches(MINI_CART_SELECTORS.quantityInput)) return;
 
@@ -458,11 +445,7 @@ function initMiniCart(block) {
         input.value = quantity;
       }
 
-      if (quantity === prevQuantity) return;
-
-      updateMinusButtonState(container, quantity);
-
-      debounceCartUpdate({
+      updateCart({
         block,
         line,
         quantity,
