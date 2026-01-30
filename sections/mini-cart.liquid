@@ -147,6 +147,9 @@
                       type="button"
                       class="mini-cart__quantity-button js-mini-cart-quantity-button"
                       data-action="minus"
+                      {% if item.quantity < 2 %}
+                        disabled
+                      {% endif %}
                     >
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M6 12H18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -225,70 +228,68 @@
                       {% continue %}
                     {% endif %}
 
-                    <div class="mini-cart__upsell-products__item swiper-slide">
-                      <div class="mini-cart__upsell-products__item swiper-slide">
-                        {% if item.featured_image != blank %}
-                          <div class="mini-cart__item-image-wrapper">
-                            <a href="{{ item.url }}">
-                              <img
-                                class="mini-cart__item-image"
-                                src="{{ item.featured_image | image_url: width: 80 }}"
-                                srcset="
-                                  {{ item.featured_image | image_url: width: 80 }} 1x,
-                                  {{ item.featured_image | image_url: width: 160 }} 2x
-                                "
-                                alt="{{ item.title | escape }}"
-                                width="80"
-                                height="80"
-                                loading="lazy"
-                              >
-                            </a>
-                          </div>
-                        {% else %}
-                          <div class="mini-cart__item-placeholder">
-                            <a href="{{ item.url }}">
-                              {{ 'product-apparel-1' | placeholder_svg_tag: 'mini-cart__item-image-svg' }}
-                            </a>
-                          </div>
-                        {% endif %}
-
-                        <div class="mini-cart__item-info">
-                          <a class="mini-cart__item-title" href="{{ item.url }}">
-                            {{ item.title }}
+                    <div class="mini-cart__upsell-products__item swiper-slide js-mini-cart-upsell-products-item">
+                      {% if item.featured_image != blank %}
+                        <div class="mini-cart__item-image-wrapper">
+                          <a href="{{ item.url }}">
+                            <img
+                              class="mini-cart__item-image"
+                              src="{{ item.featured_image | image_url: width: 80 }}"
+                              srcset="
+                                {{ item.featured_image | image_url: width: 80 }} 1x,
+                                {{ item.featured_image | image_url: width: 160 }} 2x
+                              "
+                              alt="{{ item.title | escape }}"
+                              width="80"
+                              height="80"
+                              loading="lazy"
+                            >
                           </a>
+                        </div>
+                      {% else %}
+                        <div class="mini-cart__item-placeholder">
+                          <a href="{{ item.url }}">
+                            {{ 'product-apparel-1' | placeholder_svg_tag: 'mini-cart__item-image-svg' }}
+                          </a>
+                        </div>
+                      {% endif %}
 
-                          <div class="mini-cart__actions js-mini-cart-actions">
-                            <div class="mini-cart__item-price-container">
-                              <div class="mini-cart__item-price">
-                                <span>
-                                  {{ item.selected_or_first_available_variant.price | money }}
-                                </span>
-                              </div>
+                      <div class="mini-cart__item-info">
+                        <a class="mini-cart__item-title" href="{{ item.url }}">
+                          {{ item.title }}
+                        </a>
 
-                              {% if item.selected_or_first_available_variant.compare_at_price
-                                  > item.selected_or_first_available_variant.price
-                              %}
-                                <span class="mini-cart__item-compare-price">
-                                  {{ item.selected_or_first_available_variant.compare_at_price | money }}
-                                </span>
-                              {% endif %}
+                        <div class="mini-cart__actions js-mini-cart-actions">
+                          <div class="mini-cart__item-price-container">
+                            <div class="mini-cart__item-price">
+                              <span>
+                                {{ item.selected_or_first_available_variant.price | money }}
+                              </span>
                             </div>
 
-                            <button
-                              type="button"
-                              class="mini-cart__upsell-products__button js-mini-cart-add-to-cart"
-                              data-variant-id="{{ item.selected_or_first_available_variant.id }}"
-                              {% unless item.selected_or_first_available_variant.available %}
-                                disabled
-                              {% endunless %}
-                            >
-                              {% if item.selected_or_first_available_variant.available %}
-                                Add to cart
-                              {% else %}
-                                Sold out
-                              {% endif %}
-                            </button>
+                            {% if item.selected_or_first_available_variant.compare_at_price
+                                > item.selected_or_first_available_variant.price
+                            %}
+                              <span class="mini-cart__item-compare-price">
+                                {{ item.selected_or_first_available_variant.compare_at_price | money }}
+                              </span>
+                            {% endif %}
                           </div>
+
+                          <button
+                            type="button"
+                            class="mini-cart__upsell-products__button js-mini-cart-add-to-cart"
+                            data-variant-id="{{ item.selected_or_first_available_variant.id }}"
+                            {% unless item.selected_or_first_available_variant.available %}
+                              disabled
+                            {% endunless %}
+                          >
+                            {% if item.selected_or_first_available_variant.available %}
+                              Add to cart
+                            {% else %}
+                              Sold out
+                            {% endif %}
+                          </button>
                         </div>
                       </div>
                     </div>
