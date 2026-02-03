@@ -266,9 +266,13 @@
   .mini-cart__upsell-products__item {
     display: flex;
     justify-content: space-between;
-    gap: 24px;
+    gap: 16px;
     align-items: flex-start;
     position: relative;
+
+    @media screen and (min-width: 768px) {
+      gap: 24px;
+    }
 
     &:has(.mini-cart__item-title:hover, .mini-cart__item-image-wrapper:hover, .mini-cart__item-placeholder:hover) {
       .mini-cart__item-image,
@@ -464,7 +468,6 @@
   }
 
   .mini-cart__actions {
-    align-items: flex-end;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -718,7 +721,7 @@
     justify-content: flex-end;
     border: none;
     width: 30px;
-    aspect-ratio: 1;
+    height: 30px;
     padding: 0;
     cursor: pointer;
 
