@@ -1,0 +1,28 @@
+<div
+  class="custom-predictive-search js-custom-predictive-search modal"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Predictive search"
+>
+  <div class="modal__content">
+    <div class="modal__header">
+      <div class="custom-predictive-search__input-wrapper">
+        <input
+          class="custom-predictive-search__input js-custom-predictive-search-input"
+          type="search"
+          placeholder="Search for"
+        >
+
+        <button type="button" tabindex="-1" class="custom-predictive-search__clear js-custom-predictive-search-clear">
+          Clear
+        </button>
+      </div>
+
+      <button class="modal__close-button js-custom-predictive-search-close" type="button"></button>
+    </div>
+
+    <div class="modal__inner-content">
+      {% section 'custom-predictive-search' %}
+    </div>
+  </div>
+</div>

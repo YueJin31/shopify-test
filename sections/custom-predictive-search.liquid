@@ -1,0 +1,240 @@
+{{ 'custom-predictive-search.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign predictive_search_heading = settings.predictive_search_most_searched_heading
+  assign predictive_search_links = settings.predictive_search_most_searched_links
+  assign predictive_search_by_articles = settings.predictive_search_by_articles
+  assign predictive_search_by_pages = settings.predictive_search_by_pages
+%}
+
+<section class="custom-predictive-search-content js-custom-predictive-search-content">
+  {% if predictive_search.performed %}
+    {% liquid
+      assign products_count = predictive_search.resources.products.size
+      assign articles_count = predictive_search.resources.articles.size
+      assign pages_count = predictive_search.resources.pages.size
+
+      assign total_results = products_count | plus: articles_count | plus: pages_count
+    %}
+
+    {% if total_results == 0 %}
+      <p class="custom-predictive-search__empty">No results found</p>
+    {% else %}
+      {% liquid
+        assign active_tab = ''
+
+        if products_count > 0
+          assign active_tab = 'products'
+        elsif predictive_search_by_articles and articles_count > 0
+          assign active_tab = 'articles'
+        elsif predictive_search_by_pages and pages_count > 0
+          assign active_tab = 'pages'
+        endif
+      %}
+
+      <div class="custom-predictive-search__tabs">
+        <div class="custom-predictive-search__tabs-inner">
+          {% if products_count > 0 %}
+            <button
+              class="custom-predictive-search-tab js-custom-predictive-search-tab {% if active_tab == 'products' %}is-active{% endif %}"
+              data-tab="products"
+              role="tab"
+            >
+              Products
+            </button>
+          {% endif %}
+
+          {% if predictive_search_by_articles and articles_count > 0 %}
+            <button
+              class="custom-predictive-search-tab js-custom-predictive-search-tab {% if active_tab == 'articles' %}is-active{% endif %}"
+              data-tab="articles"
+              role="tab"
+            >
+              Articles
+            </button>
+          {% endif %}
+
+          {% if predictive_search_by_pages and pages_count > 0 %}
+            <button
+              class="custom-predictive-search-tab js-custom-predictive-search-tab {% if active_tab == 'pages' %}is-active{% endif %}"
+              data-tab="pages"
+              role="tab"
+            >
+              Pages
+            </button>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="custom-predictive-search__results js-custom-predictive-search-results">
+        {% if products_count > 0 %}
+          <div
+            class="custom-predictive-search__results-list js-custom-predictive-search-tab-content {% if active_tab == 'products' %}is-active{% endif %}"
+            data-tab-content="products"
+            role="tabpanel"
+          >
+            {% for product in predictive_search.resources.products %}
+              <div class="custom-predictive-search__results-item custom-predictive-search__results-item--product">
+                {% if product.featured_image != blank %}
+                  <div class="custom-predictive-search__results-item-wrapper">
+                    <a
+                      class="custom-predictive-search__results-item-link"
+                      href="{{ product.url | split: '?' | first }}"
+                    >
+                      <img
+                        class="custom-predictive-search__results-item-image"
+                        src="{{ product.featured_image | image_url: width: 120 }}"
+                        srcset="
+                          {{ product.featured_image | image_url: width: 120 }} 1x,
+                          {{ product.featured_image | image_url: width: 240 }} 2x
+                        "
+                        alt="{{ product.featured_image.alt | escape }}"
+                        width="120"
+                        height="120"
+                        loading="lazy"
+                      >
+                    </a>
+                  </div>
+                {% else %}
+                  <div class="custom-predictive-search__results-item-placeholder">
+                    <a
+                      class="custom-predictive-search__results-item-link"
+                      href="{{ product.url | split: '?' | first }}"
+                    >
+                      {{
+                        'product-apparel-1'
+                        | placeholder_svg_tag: 'custom-predictive-search__results-item-image-svg'
+                      }}
+                    </a>
+                  </div>
+                {% endif %}
+
+                <div class="custom-predictive-search__results-item-info">
+                  <a class="custom-predictive-search__results-item-title" href="{{ product.url | split: '?' | first }}">
+                    {{ product.title | highlight: predictive_search.terms }}
+                  </a>
+
+                  <div class="custom-predictive-search__results-item-price-container">
+                    <div class="custom-predictive-search__results-item-price">
+                      <span>
+                        {{ product.selected_or_first_available_variant.price | money }}
+                      </span>
+                    </div>
+
+                    {% if product.selected_or_first_available_variant.compare_at_price
+                        > product.selected_or_first_available_variant.price
+                    %}
+                      <span class="custom-predictive-search__results-item-compare-price">
+                        {{ product.selected_or_first_available_variant.compare_at_price | money }}
+                      </span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if articles_count > 0 %}
+          <div
+            class="custom-predictive-search__results-list js-custom-predictive-search-tab-content {% if active_tab == 'articles' %}is-active{% endif %}"
+            data-tab-content="articles"
+            role="tabpanel"
+          >
+            {% for article in predictive_search.resources.articles %}
+              <div class="custom-predictive-search__results-item custom-predictive-search__results-item--article">
+                {% if article.image != blank %}
+                  <div class="custom-predictive-search__results-item-wrapper">
+                    <a
+                      class="custom-predictive-search__results-item-link"
+                      href="{{ article.url | split: '?' | first }}"
+                    >
+                      <img
+                        class="custom-predictive-search__results-item-image"
+                        src="{{ article.image | image_url: width: 120 }}"
+                        srcset="
+                          {{ article.image | image_url: width: 120 }} 1x,
+                          {{ article.image | image_url: width: 240 }} 2x
+                        "
+                        alt="{{ article.image.alt | escape }}"
+                        width="120"
+                        height="120"
+                        loading="lazy"
+                      >
+                    </a>
+                  </div>
+                {% else %}
+                  <div class="custom-predictive-search__results-item-placeholder">
+                    <a
+                      class="custom-predictive-search__results-item-link"
+                      href="{{ article.url | split: '?' | first }}"
+                    >
+                      {{ 'blog-apparel-1' | placeholder_svg_tag: 'custom-predictive-search__results-item-image-svg' }}
+                    </a>
+                  </div>
+                {% endif %}
+
+                <div class="custom-predictive-search__results-item-info">
+                  <div class="custom-predictive-search__results-item-data">
+                    <span class="custom-predictive-search__results-item-created">
+                      {{ article.created_at | date: '%B %d, %Y' }}
+                    </span>
+
+                    <span class="custom-predictive-search__results-item-author">{{ article.author }}</span>
+
+                    <span class="custom-predictive-search__results-item-comments">
+                      {{ article.comments_count }}
+                      {{ article.comments_count | pluralize: 'comment', 'comments' }}
+                    </span>
+                  </div>
+
+                  <a class="custom-predictive-search__results-item-title" href="{{ article.url | split: '?' | first }}">
+                    {{ article.title | highlight: predictive_search.terms }}
+                  </a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if pages_count > 0 %}
+          <div
+            class="custom-predictive-search__results-list js-custom-predictive-search-tab-content {% if active_tab == 'pages' %}is-active{% endif %}"
+            data-tab-content="pages"
+            role="tabpanel"
+          >
+            {% for page in predictive_search.resources.pages %}
+              <a
+                href="{{ page.url | split: '?' | first }}"
+                class="custom-predictive-search__results-item custom-predictive-search__results-item--page"
+              >
+                <span>{{ page.title | highlight: predictive_search.terms }}</span>
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="custom-predictive-search__see-all">
+        <a
+          href="/search?q={{ predictive_search.terms | url_encode }}"
+          class="custom-predictive-search__see-all-btn"
+        >
+          See all results
+        </a>
+      </div>
+    {% endif %}
+  {% else %}
+    {% if predictive_search_links != blank %}
+      <div class="custom-predictive-search__most-searched">
+        <p class="custom-predictive-search__most-searched-heading">{{ predictive_search_heading }}</p>
+
+        <div class="custom-predictive-search__most-searched-links">
+          {% for link in predictive_search_links.links %}
+            <a class="custom-predictive-search__most-searched-link" href="{{ link.url }}">{{ link.title }}</a>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+</section>

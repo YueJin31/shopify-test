@@ -9,6 +9,9 @@
  */
 {
   "current": {
+    "predictive_search_by_articles": true,
+    "predictive_search_by_pages": true,
+    "predictive_search_most_searched_links": "main-menu",
     "logo_height": 36,
     "logo_height_mobile": 28,
     "type_body_font": "inter_n4",
@@ -92,12 +95,12 @@
           ],
           "promo_message_text": "Hello world! <strong>Test message</strong> with link to <a href=\"/pages/contact\" title=\"Contact\">contact page</a>",
           "promo_message_icon": "shopify://shop_images/message-question.svg",
-          "promo_message_color": "rgba(0,0,0,0)",
-          "promo_message_background": "#f6f6f6",
+          "promo_message_color": "#dfdfdf",
+          "promo_message_background": "#52ca48",
           "upsell_products_heading": "You May Also Like",
           "upsell_products_items": [
             "7-knots-of-protection-bracelet",
-            "the-3p-fulfilled-snowboard"
+            "selling-plans-ski-wax"
           ],
           "free_shipping_amount": 5000,
           "free_shipping_message": "You are only {amount} away from free shipping",
@@ -109,6 +112,16 @@
           "cart_note_edit_label": "Edit your note order",
           "terms_and_conditions_text": "I agree with the <a href=\"/pages/data-sharing-opt-out\" title=\"Your privacy choices\">terms and conditions</a>"
         }
+      },
+      "collection-products": {
+        "type": "collection-products",
+        "settings": {
+          "collection": ""
+        }
+      },
+      "custom-predictive-search": {
+        "type": "custom-predictive-search",
+        "settings": {}
       }
     },
     "content_for_index": [],
