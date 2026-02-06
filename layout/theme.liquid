@@ -115,7 +115,9 @@
     {% endif %}
 
     {% section 'mini-cart' %}
+    {% render 'predictive-search-popup' %}
 
+    <script src="{{ 'custom-predictive-search.js' | asset_url }}" defer></script>
     <script src="{{ 'mini-cart-drawer.js' | asset_url }}" defer></script>
     <script src="{{ 'mini-cart.js' | asset_url }}" defer></script>
     <script src="{{ 'add-to-cart.js' | asset_url }}" defer></script>
