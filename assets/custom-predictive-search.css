@@ -82,12 +82,9 @@
     }
   }
 
-  .custom-predictive-search__error {
-    color: var(--red);
-  }
-
   .custom-predictive-search__empty,
-  .custom-predictive-search__most-searched {
+  .custom-predictive-search__most-searched,
+  .custom-predictive-search__error {
     color: var(--black);
     margin-top: 24px;
 
@@ -95,6 +92,10 @@
       margin-top: 32px;
     }
   }
+}
+
+.custom-predictive-search__error {
+  color: var(--red);
 }
 
 .custom-predictive-search-content {
