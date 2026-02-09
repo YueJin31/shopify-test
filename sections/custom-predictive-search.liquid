@@ -91,7 +91,9 @@
                         alt="{{ product.featured_image.alt | escape }}"
                         width="120"
                         height="120"
-                        loading="lazy"
+                        {% if forloop.length > 1 %}
+                          loading="lazy"
+                        {% endif %}
                       >
                     </a>
                   </div>
@@ -159,7 +161,9 @@
                         alt="{{ article.image.alt | escape }}"
                         width="120"
                         height="120"
-                        loading="lazy"
+                        {% if forloop.length > 1 %}
+                          loading="lazy"
+                        {% endif %}
                       >
                     </a>
                   </div>
