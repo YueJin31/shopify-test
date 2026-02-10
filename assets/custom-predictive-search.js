@@ -29,6 +29,14 @@ function debounce(fn, delay = 500) {
   };
 }
 
+function setClearBtnLoading(modal, loading) {
+  const clearBtn = modal.querySelector(CUSTOM_PREDICTIVE_SEARCH_SELECTORS.predictiveSearchClearBtn);
+
+  if (!clearBtn) return;
+
+  clearBtn.disabled = loading;
+}
+
 function toggleClearBtn(modal, show) {
   const clearBtn = modal.querySelector(CUSTOM_PREDICTIVE_SEARCH_SELECTORS.predictiveSearchClearBtn);
 
@@ -62,26 +70,26 @@ const handleInput = debounce(async (e, modal, initialHtml) => {
 
   if (!query) {
     wrapper.innerHTML = initialHtml;
-
     return;
   }
+
+  setClearBtnLoading(modal, true);
 
   try {
     const content = await fetchPredictiveResults(query);
 
     if (!content || !content.innerHTML.trim()) {
       wrapper.innerHTML = `<p class="custom-predictive-search__empty">No results found</p>`;
-
       return;
     }
 
     wrapper.innerHTML = content.innerHTML;
 
-    requestAnimationFrame(() => {
-      updateResultListHeight(modal);
-    });
+    requestAnimationFrame(() => updateResultListHeight(modal));
   } catch (err) {
     wrapper.innerHTML = `<p class="custom-predictive-search__error">${err.message}</p>`;
+  } finally {
+    setClearBtnLoading(modal, false);
   }
 }, 500);
 
@@ -97,6 +105,7 @@ function openModal(modal) {
   modal.setAttribute("aria-hidden", "false");
 
   const input = modal.querySelector(CUSTOM_PREDICTIVE_SEARCH_SELECTORS.predictiveSearchInput);
+
   window.setTimeout(() => input.focus(), 0);
 }
 
@@ -151,9 +160,7 @@ function initCustomPredictiveSearch() {
       return;
     }
 
-    if (e.target === modal || e.target.closest(CUSTOM_PREDICTIVE_SEARCH_SELECTORS.predictiveSearchModalCloseBtn)) {
-      closeModal(modal);
-    }
+    if (e.target === modal || e.target.closest(CUSTOM_PREDICTIVE_SEARCH_SELECTORS.predictiveSearchModalCloseBtn)) closeModal(modal);
   });
 
   document.addEventListener("click", (e) => {
@@ -189,9 +196,7 @@ function initCustomPredictiveSearch() {
   });
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      closeModal(modal);
-    }
+    if (e.key === "Escape") closeModal(modal);
   });
 
   input.addEventListener("input", (e) => {

@@ -80,6 +80,10 @@
       opacity: 1;
       pointer-events: auto;
     }
+
+    &:disabled {
+      opacity: 0.5;
+    }
   }
 
   .custom-predictive-search__empty,
