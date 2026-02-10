@@ -227,9 +227,8 @@
       border: 1px solid var(--light-gray);
       border-radius: 8px;
       background: url('data:image/svg+xml,<svg width="7" height="13" viewBox="0 0 7 13" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.75 11.31L5.09667 6.96333C5.61 6.45 5.61 5.61 5.09667 5.09667L0.75 0.75" stroke="black" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/></svg>') var(--white) no-repeat;
-      background-size: 13px contain;
+      background-size: 10px;
       background-position: center;
-      transition: background-position 0.3s ease;
     }
 
     @media screen and (min-width: 768px) {
