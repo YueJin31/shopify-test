@@ -219,14 +219,12 @@
         {% endif %}
       </div>
 
-      <div class="custom-predictive-search__see-all">
-        <a
-          href="/search?q={{ predictive_search.terms | url_encode }}"
-          class="custom-predictive-search__see-all-btn"
-        >
-          See all results
-        </a>
-      </div>
+      <a
+        href="/search?q={{ predictive_search.terms | url_encode }}"
+        class="custom-predictive-search__see-all-btn"
+      >
+        See all results
+      </a>
     {% endif %}
   {% else %}
     {% if predictive_search_links != blank %}
