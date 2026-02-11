@@ -186,10 +186,12 @@
 
                     <span class="custom-predictive-search__results-item-author">{{ article.author }}</span>
 
-                    <span class="custom-predictive-search__results-item-comments">
-                      {{ article.comments_count }}
-                      {{ article.comments_count | pluralize: 'comment', 'comments' }}
-                    </span>
+                    {% if article.comments_enabled? %}
+                      <span class="custom-predictive-search__results-item-comments">
+                        {{ article.comments_count }}
+                        {{ article.comments_count | pluralize: 'comment', 'comments' }}
+                      </span>
+                    {% endif %}
                   </div>
 
                   <a class="custom-predictive-search__results-item-title" href="{{ article.url | split: '?' | first }}">
