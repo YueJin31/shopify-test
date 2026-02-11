@@ -220,7 +220,7 @@
       </div>
 
       <a
-        href="/search?q={{ predictive_search.terms | url_encode }}"
+        href="{{ routes.predictive_search_url }}?q={{ predictive_search.terms | url_encode }}"
         class="custom-predictive-search__see-all-btn"
       >
         See all results
@@ -229,7 +229,9 @@
   {% else %}
     {% if predictive_search_links != blank %}
       <div class="custom-predictive-search__most-searched">
-        <p class="custom-predictive-search__most-searched-heading">{{ predictive_search_heading }}</p>
+        {% if predictive_search_heading != blank %}
+          <p class="custom-predictive-search__most-searched-heading">{{ predictive_search_heading }}</p>
+        {% endif %}
 
         <div class="custom-predictive-search__most-searched-links">
           {% for link in predictive_search_links.links %}
