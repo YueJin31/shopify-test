@@ -98,11 +98,11 @@ function openModal(modal) {
 
   document.body.style.overflow = "hidden";
 
+  modal.setAttribute("aria-hidden", "false");
+
   requestAnimationFrame(() => {
     modal.classList.add(CUSTOM_PREDICTIVE_SEARCH_CLASSES.show);
   });
-
-  modal.setAttribute("aria-hidden", "false");
 
   const input = modal.querySelector(CUSTOM_PREDICTIVE_SEARCH_SELECTORS.predictiveSearchInput);
 
@@ -196,7 +196,7 @@ function initCustomPredictiveSearch() {
   });
 
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") closeModal(modal);
+    if (e.key === "Escape" && modal.classList.contains(CUSTOM_PREDICTIVE_SEARCH_CLASSES.show)) closeModal(modal);
   });
 
   input.addEventListener("input", (e) => {
