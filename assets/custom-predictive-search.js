@@ -166,7 +166,7 @@ function initCustomPredictiveSearch() {
   document.addEventListener("click", (e) => {
     const tab = e.target.closest(CUSTOM_PREDICTIVE_SEARCH_SELECTORS.predictiveSearchTab);
 
-    if (!tab) return;
+    if (!tab || tab.classList.contains(CUSTOM_PREDICTIVE_SEARCH_CLASSES.active)) return;
 
     const wrapper = tab.closest(CUSTOM_PREDICTIVE_SEARCH_SELECTORS.predictiveSearchSection);
     const tabType = tab.dataset.tab;
