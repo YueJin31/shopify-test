@@ -220,7 +220,7 @@
       </div>
 
       <a
-        href="/search?q={{ predictive_search.terms | url_encode }}"
+        href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}"
         class="custom-predictive-search__see-all-btn"
       >
         See all results
