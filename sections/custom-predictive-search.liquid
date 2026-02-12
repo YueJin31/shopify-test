@@ -7,7 +7,7 @@
   assign predictive_search_by_pages = settings.predictive_search_by_pages
 %}
 
-<section class="custom-predictive-search-content js-custom-predictive-search-content">
+<section class="custom-predictive-search__content js-custom-predictive-search-content">
   {% if predictive_search.performed %}
     {% liquid
       assign products_count = predictive_search.resources.products.size
