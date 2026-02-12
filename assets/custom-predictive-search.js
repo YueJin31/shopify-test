@@ -163,7 +163,7 @@ function initCustomPredictiveSearch() {
     if (e.target === modal || e.target.closest(CUSTOM_PREDICTIVE_SEARCH_SELECTORS.predictiveSearchModalCloseBtn)) closeModal(modal);
   });
 
-  document.addEventListener("click", (e) => {
+  modal.addEventListener("click", (e) => {
     const tab = e.target.closest(CUSTOM_PREDICTIVE_SEARCH_SELECTORS.predictiveSearchTab);
 
     if (!tab || tab.classList.contains(CUSTOM_PREDICTIVE_SEARCH_CLASSES.active)) return;
@@ -181,7 +181,7 @@ function initCustomPredictiveSearch() {
     wrapper.querySelector(`${CUSTOM_PREDICTIVE_SEARCH_SELECTORS.predictiveSearchTabContent}[data-tab-content="${tabType}"]`)?.classList.add(CUSTOM_PREDICTIVE_SEARCH_CLASSES.active);
   });
 
-  document.addEventListener("click", (e) => {
+  modal.addEventListener("click", (e) => {
     const clear = e.target.closest(CUSTOM_PREDICTIVE_SEARCH_SELECTORS.predictiveSearchClearBtn);
 
     if (!clear) return;
