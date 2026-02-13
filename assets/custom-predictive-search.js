@@ -91,7 +91,7 @@ const handleInput = debounce(async (e, modal, initialHtml) => {
   } finally {
     setClearBtnLoading(modal, false);
   }
-}, 500);
+});
 
 function openModal(modal) {
   updateResultListHeight(modal);
