@@ -141,8 +141,6 @@ function initCustomPredictiveSearch() {
 
   if (!modal) return;
 
-  updateResultListHeight(modal);
-
   const input = modal.querySelector(CUSTOM_PREDICTIVE_SEARCH_SELECTORS.predictiveSearchInput);
   const wrapper = modal.querySelector(CUSTOM_PREDICTIVE_SEARCH_SELECTORS.predictiveSearchSection);
 
