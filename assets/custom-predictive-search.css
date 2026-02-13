@@ -115,6 +115,7 @@
 
   > .custom-predictive-search__error {
     color: var(--red);
+    font-size: 16px;
   }
 
   .custom-predictive-search__most-searched-link {
