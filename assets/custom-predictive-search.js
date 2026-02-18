@@ -58,8 +58,6 @@ function fetchPredictiveResults(query, modal) {
 
   const url = `/search/suggest?q=${encodeURIComponent(query)}&resources[type]=${types.join(",")}&section_id=custom-predictive-search`;
 
-  console.log(url);
-
   return fetch(url)
     .then((res) => {
       if (!res.ok) throw new Error("Network error");
