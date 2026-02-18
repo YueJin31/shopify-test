@@ -43,17 +43,26 @@ function toggleClearBtn(modal, show) {
   if (!clearBtn) return;
 
   clearBtn.classList.toggle(CUSTOM_PREDICTIVE_SEARCH_CLASSES.active, show);
-
-  clearBtn.setAttribute("tabindex", show ? "0" : "-1");
 }
 
-function fetchPredictiveResults(query) {
-  const url = `/search/suggest?q=${encodeURIComponent(query)}&resources[type]=product,article,page&section_id=custom-predictive-search`;
+function fetchPredictiveResults(query, modal) {
+  const section = modal.querySelector(CUSTOM_PREDICTIVE_SEARCH_SELECTORS.predictiveSearchSection);
+
+  const searchArticles = section.dataset.searchArticles === "true";
+  const searchPages = section.dataset.searchPages === "true";
+
+  let types = ["product"];
+
+  if (searchArticles) types.push("article");
+  if (searchPages) types.push("page");
+
+  const url = `/search/suggest?q=${encodeURIComponent(query)}&resources[type]=${types.join(",")}&section_id=custom-predictive-search`;
+
+  console.log(url);
 
   return fetch(url)
     .then((res) => {
       if (!res.ok) throw new Error("Network error");
-
       return res.text();
     })
     .then((html) => {
@@ -76,7 +85,7 @@ const handleInput = debounce(async (e, modal, initialHtml) => {
   setClearBtnLoading(modal, true);
 
   try {
-    const content = await fetchPredictiveResults(query);
+    const content = await fetchPredictiveResults(query, modal);
 
     if (!content || !content.innerHTML.trim()) {
       wrapper.innerHTML = `<p class="custom-predictive-search__empty">No results found</p>`;
@@ -98,8 +107,6 @@ function openModal(modal) {
 
   document.body.style.overflow = "hidden";
 
-  modal.setAttribute("aria-hidden", "false");
-
   requestAnimationFrame(() => {
     modal.classList.add(CUSTOM_PREDICTIVE_SEARCH_CLASSES.show);
   });
@@ -113,8 +120,6 @@ function closeModal(modal) {
   modal.classList.remove(CUSTOM_PREDICTIVE_SEARCH_CLASSES.show);
 
   document.body.style.overflow = "";
-
-  modal.setAttribute("aria-hidden", "true");
 }
 
 function updateResultListHeight(modal) {

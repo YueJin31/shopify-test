@@ -7,7 +7,11 @@
   assign predictive_search_by_pages = settings.predictive_search_by_pages
 %}
 
-<section class="custom-predictive-search__content js-custom-predictive-search-content">
+<section
+  class="custom-predictive-search__content js-custom-predictive-search-content"
+  data-search-articles="{{ predictive_search_by_articles }}"
+  data-search-pages="{{ predictive_search_by_pages }}"
+>
   {% if predictive_search.performed %}
     {% liquid
       assign products_count = predictive_search.resources.products.size
@@ -81,20 +85,28 @@
                       class="custom-predictive-search__results-item-link"
                       href="{{ product.url | split: '?' | first }}"
                     >
-                      <img
-                        class="custom-predictive-search__results-item-image"
-                        src="{{ product.featured_image | image_url: width: 120 }}"
-                        srcset="
-                          {{ product.featured_image | image_url: width: 120 }} 1x,
-                          {{ product.featured_image | image_url: width: 240 }} 2x
-                        "
-                        alt="{{ product.featured_image.alt | escape }}"
-                        width="120"
-                        height="120"
-                        {% if forloop.length > 1 %}
+                      <picture class="custom-predictive-search__results-item-picture">
+                        <source
+                          media="(max-width: 767px)"
+                          srcset="
+                            {{ product.featured_image | image_url: width: 80 }} 1x,
+                            {{ product.featured_image | image_url: width: 160 }} 2x
+                          "
+                        >
+
+                        <img
+                          class="custom-predictive-search__results-item-image"
+                          src="{{ product.featured_image | image_url: width: 120 }}"
+                          srcset="
+                            {{ product.featured_image | image_url: width: 120 }} 1x,
+                            {{ product.featured_image | image_url: width: 240 }} 2x
+                          "
+                          alt="{{ product.featured_image.alt | escape }}"
+                          width="120"
+                          height="120"
                           loading="lazy"
-                        {% endif %}
-                      >
+                        >
+                      </picture>
                     </a>
                   </div>
                 {% else %}
@@ -151,20 +163,28 @@
                       class="custom-predictive-search__results-item-link"
                       href="{{ article.url | split: '?' | first }}"
                     >
-                      <img
-                        class="custom-predictive-search__results-item-image"
-                        src="{{ article.image | image_url: width: 120 }}"
-                        srcset="
-                          {{ article.image | image_url: width: 120 }} 1x,
-                          {{ article.image | image_url: width: 240 }} 2x
-                        "
-                        alt="{{ article.image.alt | escape }}"
-                        width="120"
-                        height="120"
-                        {% if forloop.length > 1 %}
+                      <picture class="custom-predictive-search__results-item-picture">
+                        <source
+                          media="(max-width: 767px)"
+                          srcset="
+                            {{ article.image | image_url: width: 80 }} 1x,
+                            {{ article.image | image_url: width: 160 }} 2x
+                          "
+                        >
+
+                        <img
+                          class="custom-predictive-search__results-item-image"
+                          src="{{ article.image | image_url: width: 120 }}"
+                          srcset="
+                            {{ article.image | image_url: width: 120 }} 1x,
+                            {{ article.image | image_url: width: 240 }} 2x
+                          "
+                          alt="{{ article.image.alt | escape }}"
+                          width="120"
+                          height="120"
                           loading="lazy"
-                        {% endif %}
-                      >
+                        >
+                      </picture>
                     </a>
                   </div>
                 {% else %}
@@ -180,14 +200,14 @@
 
                 <div class="custom-predictive-search__results-item-info">
                   <div class="custom-predictive-search__results-item-data">
-                    <span class="custom-predictive-search__results-item-created">
+                    <span class="custom-predictive-search__results-item-detail">
                       {{ article.created_at | date: '%B %d, %Y' }}
                     </span>
 
-                    <span class="custom-predictive-search__results-item-author">{{ article.author }}</span>
+                    <span class="custom-predictive-search__results-item-detail">{{ article.author }}</span>
 
                     {% if article.comments_enabled? %}
-                      <span class="custom-predictive-search__results-item-comments">
+                      <span class="custom-predictive-search__results-item-detail">
                         {{ article.comments_count }}
                         {{ article.comments_count | pluralize: 'comment', 'comments' }}
                       </span>
@@ -221,8 +241,20 @@
         {% endif %}
       </div>
 
+      {% liquid
+        assign search_types = 'product'
+
+        if predictive_search_by_articles
+          assign search_types = search_types | append: ',article'
+        endif
+
+        if predictive_search_by_pages
+          assign search_types = search_types | append: ',page'
+        endif
+      %}
+
       <a
-        href="{{ routes.predictive_search_url }}?q={{ predictive_search.terms | url_encode }}"
+        href="{{ routes.search_url }}?q={{ predictive_search.terms | url_encode }}&type={{ search_types }}"
         class="custom-predictive-search__see-all-btn"
       >
         See all results
