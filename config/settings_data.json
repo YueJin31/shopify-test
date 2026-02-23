@@ -95,8 +95,8 @@
           ],
           "promo_message_text": "Hello world! <strong>Test message</strong> with link to <a href=\"/pages/contact\" title=\"Contact\">contact page</a>",
           "promo_message_icon": "shopify://shop_images/message-question.svg",
-          "promo_message_color": "#dfdfdf",
-          "promo_message_background": "#52ca48",
+          "promo_message_color": "#1a1a1a",
+          "promo_message_background": "#e6e6e6",
           "upsell_products_heading": "You May Also Like",
           "upsell_products_items": [
             "7-knots-of-protection-bracelet",
