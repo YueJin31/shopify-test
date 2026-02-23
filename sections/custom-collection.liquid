@@ -1,0 +1,233 @@
+{{ 'custom-collection.css' | asset_url | stylesheet_tag }}
+
+<section class="custom-collection js-custom-collection" data-section-id="{{ section.id }}">
+  {% if section.settings.filters %}
+    <div class="custom-collection__filters">
+      <div class="custom-collection__filters-wrapper">
+        {% for filter in collection.filters %}
+          <div class="custom-collection__filter">
+            <h4 class="custom-collection__filter-title">{{ filter.label }}</h4>
+
+            {% case filter.type %}
+              {% when 'list' %}
+                {% for value in filter.values %}
+                  <label class="custom-collection__filter-label">
+                    <input
+                      class="custom-collection__filter-input js-custom-filters-input"
+                      type="checkbox"
+                      name="{{ filter.param_name }}"
+                      value="{{ value.value }}"
+                      {% if value.swatch.color %}
+                        style="background-color: {{ value.swatch.color }}"
+                      {% endif %}
+                      {% if value.active %}
+                        checked
+                      {% endif %}
+                    >
+                    {{ value.label }}
+                  </label>
+                {% endfor %}
+
+              {% when 'price_range' %}
+                <div class="custom-collection__filter-price">
+                  <div class="custom-collection__filter-price-field">
+                    <input
+                      class="custom-collection__filter-input-number js-custom-filters-input"
+                      type="number"
+                      name="{{ filter.min_value.param_name }}"
+                      value="{{ filter.min_value.value }}"
+                      placeholder="0"
+                    >
+
+                    <label class="custom-collection__filter-input-number-label">
+                      {{ cart.currency.symbol }}
+                    </label>
+                  </div>
+
+                  <div class="custom-collection__filter-price-field">
+                    <input
+                      class="custom-collection__filter-input-number js-custom-filters-input"
+                      type="number"
+                      name="{{ filter.max_value.param_name }}"
+                      value="{{ filter.max_value.value }}"
+                      placeholder="{{ filter.range_max | money_without_currency }}"
+                    >
+
+                    <label class="custom-collection__filter-input-number-label">
+                      {{ cart.currency.symbol }}
+                    </label>
+                  </div>
+                </div>
+
+                <p class="custom-collection__highest-price">The highest price is {{ filter.range_max | money }}</p>
+            {% endcase %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+  <div class="custom-collection__list js-custom-collection-list js-collection-products">
+    {% if collection.products_count == 0 %}
+      <div class="custom-collection__empty">
+        <h2 class="custom-collection__empty-title">No products found.</h2>
+
+        <p class="custom-collection__empty-text">Try using fewer filters, or clear all filters.</p>
+
+        <a class="custom-collection__empty-clear" href="{{ collection.url }}">Clear filters</a>
+      </div>
+    {% else %}
+      {% paginate collection.products by 20 %}
+        {% for product in collection.products %}
+          <div class="collection-products__item js-collection-products-item">
+            <div class="collection-products__item-image-wrapper">
+              {% if product.tags.size > 0 %}
+                <div class="collection-products__item-tags">
+                  {% for tag in product.tags %}
+                    {% assign sale_class = tag | downcase %}
+
+                    <span class="collection-products__item-tag {% if sale_class contains 'sale' %}collection-products__item-tag--sale{% endif %}">
+                      {{ tag | capitalize }}
+                    </span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              <div class="collection-products__item-actions">
+                <button
+                  class="collection-products__item-action js-add-to-cart js-collection-products-add-to-cart"
+                  aria-label="Add to cart"
+                  data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                  data-available-quantity="{{ product.selected_or_first_available_variant.inventory_quantity }}"
+                  {% unless product.selected_or_first_available_variant.available %}
+                    disabled
+                  {% endunless %}
+                ></button>
+
+                <button
+                  class="collection-products__item-action collection-products__item-action--quick-view js-quick-view-trigger"
+                  data-section-id="{{ section.id }}"
+                  data-product-handle="{{ product.handle }}"
+                ></button>
+              </div>
+
+              <a class="collection-products__item-link" href="{{ product.url }}">
+                {% assign color_option = product.options_by_name.Color | default: product.options_by_name.Colour %}
+
+                {% if color_option %}
+                  {% for value in color_option.values %}
+                    {% assign variant_image = value.variant.image %}
+                    {% assign image_to_show = variant_image | default: product.featured_image %}
+
+                    {% if image_to_show %}
+                      <picture
+                        class="collection-products__item-picture js-collection-products-item-picture {% unless forloop.first %}hidden{% endunless %}"
+                        data-variant-id="{{ value.variant.id }}"
+                      >
+                        {% render 'collection-product-picture', image: image_to_show %}
+                      </picture>
+                    {% else %}
+                      <div
+                        class="collection-products__item-placeholder js-collection-products-item-picture {% unless forloop.first %}hidden{% endunless %}"
+                        data-variant-id="{{ value.variant.id }}"
+                      >
+                        {{ 'product-apparel-2' | placeholder_svg_tag: 'collection-products__item-placeholder-svg' }}
+                      </div>
+                    {% endif %}
+                  {% endfor %}
+
+                {% elsif product.featured_image %}
+                  <picture class="collection-products__item-picture js-collection-products-item-picture">
+                    {% render 'collection-product-picture', image: product.featured_image %}
+                  </picture>
+
+                {% else %}
+                  <div class="collection-products__item-placeholder">
+                    {{ 'product-apparel-1' | placeholder_svg_tag: 'collection-products__item-placeholder-svg' }}
+                  </div>
+                {% endif %}
+              </a>
+            </div>
+
+            {% if color_option %}
+              <div class="collection-products__item-swatches js-color-swatch">
+                {% for value in color_option.values %}
+                  <button
+                    class="collection-products__item-swatch js-color-swatch-item {% if forloop.first %}is-active{% endif %}"
+                    type="button"
+                    aria-label="{{ value.name }}"
+                    data-variant-id="{{ value.variant.id }}"
+                    data-variant-price="{{ value.variant.price | money }}"
+                    data-variant-quantity="{{ value.variant.inventory_quantity }}"
+                    data-variant-compare-price="{{ value.variant.compare_at_price | money }}"
+                  >
+                    <span
+                      class="collection-products__item-swatch-color"
+                      style="background-color: {{ value.swatch.color }}"
+                    >
+                    </span>
+                  </button>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <a class="collection-products__item-link" href="{{ product.url }}">
+              <h3 class="collection-products__item-title">{{ product.title }}</h3>
+            </a>
+
+            {% liquid
+              assign price_source = product
+
+              if color_option
+                assign price_source = product.selected_or_first_available_variant
+              endif
+            %}
+
+            <div class="collection-products__item-price-info">
+              <span class="collection-products__item-price js-collection-products-item-price">
+                {{ price_source.price | money }}
+              </span>
+
+              {% if price_source.compare_at_price %}
+                <span class="collection-products__item-price collection-products__item-price--old js-collection-products-compare-price">
+                  {{ price_source.compare_at_price | money }}
+                </span>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+
+        <div class="custom-collection__pagination">
+          {{ paginate | default_pagination }}
+        </div>
+      {% endpaginate %}
+    {% endif %}
+  </div>
+</section>
+
+<script src="{{ 'custom-filters.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Custom Collection",
+  "settings": [
+    {
+      "type": "collection_list",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "filters",
+      "label": "Enable filters",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Collection",
+      "category": "Custom Sections"
+    }
+  ]
+}
+{% endschema %}
