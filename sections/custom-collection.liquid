@@ -3,66 +3,130 @@
 <section class="custom-collection js-custom-collection" data-section-id="{{ section.id }}">
   {% if section.settings.filters %}
     <div class="custom-collection__filters">
-      <div class="custom-collection__filters-wrapper">
+      <div class="custom-collection__filters-wrapper js-custom-collection-active-filters-wrapper">
+        {% assign has_active_filters = false %}
         {% for filter in collection.filters %}
-          <div class="custom-collection__filter">
-            <h4 class="custom-collection__filter-title">{{ filter.label }}</h4>
-
-            {% case filter.type %}
-              {% when 'list' %}
-                {% for value in filter.values %}
-                  <label class="custom-collection__filter-label">
-                    <input
-                      class="custom-collection__filter-input js-custom-filters-input"
-                      type="checkbox"
-                      name="{{ filter.param_name }}"
-                      value="{{ value.value }}"
-                      {% if value.swatch.color %}
-                        style="background-color: {{ value.swatch.color }}"
-                      {% endif %}
-                      {% if value.active %}
-                        checked
-                      {% endif %}
-                    >
-                    {{ value.label }}
-                  </label>
-                {% endfor %}
-
-              {% when 'price_range' %}
-                <div class="custom-collection__filter-price">
-                  <div class="custom-collection__filter-price-field">
-                    <input
-                      class="custom-collection__filter-input-number js-custom-filters-input"
-                      type="number"
-                      name="{{ filter.min_value.param_name }}"
-                      value="{{ filter.min_value.value }}"
-                      placeholder="0"
-                    >
-
-                    <label class="custom-collection__filter-input-number-label">
-                      {{ cart.currency.symbol }}
-                    </label>
-                  </div>
-
-                  <div class="custom-collection__filter-price-field">
-                    <input
-                      class="custom-collection__filter-input-number js-custom-filters-input"
-                      type="number"
-                      name="{{ filter.max_value.param_name }}"
-                      value="{{ filter.max_value.value }}"
-                      placeholder="{{ filter.range_max | money_without_currency }}"
-                    >
-
-                    <label class="custom-collection__filter-input-number-label">
-                      {{ cart.currency.symbol }}
-                    </label>
-                  </div>
-                </div>
-
-                <p class="custom-collection__highest-price">The highest price is {{ filter.range_max | money }}</p>
-            {% endcase %}
-          </div>
+          {% if filter.active_values.size > 0 %}
+            {% assign has_active_filters = true %}
+          {% endif %}
         {% endfor %}
+
+        {% if has_active_filters %}
+          <div class="custom-collection__filters-active js-custom-collection-active-filters">
+            {% for filter in collection.filters %}
+              {% if filter.type == 'list' %}
+                {% for value in filter.active_values %}
+                  <button
+                    class="custom-collection__filters-active-btn js-custom-collection-remove-filter"
+                    type="button"
+                    data-param-name="{{ filter.param_name }}"
+                    data-value="{{ value.value }}"
+                  >
+                    {{ value.label }}
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M12 4L4 12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> <path d="M4 4L12 12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                {% endfor %}
+              {% endif %}
+
+              {% if filter.type == 'price_range' %}
+                {% if filter.min_value.value != blank %}
+                  <button
+                    class="custom-collection__filters-active-btn js-custom-collection-remove-filter"
+                    type="button"
+                    data-param-name="{{ filter.min_value.param_name }}"
+                    data-value=""
+                  >
+                    From {{ filter.min_value.value | money }}
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M12 4L4 12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> <path d="M4 4L12 12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                {% endif %}
+
+                {% if filter.max_value.value != blank %}
+                  <button
+                    class="custom-collection__filters-active-btn js-custom-collection-remove-filter"
+                    type="button"
+                    data-param-name="{{ filter.max_value.param_name }}"
+                    data-value=""
+                  >
+                    To {{ filter.max_value.value | money }}
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                      <path d="M12 4L4 12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> <path d="M4 4L12 12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <div class="custom-collection__filters-list">
+          {% for filter in collection.filters %}
+            <div class="custom-collection__filter">
+              <h4 class="custom-collection__filter-title">{{ filter.label }}</h4>
+
+              {% case filter.type %}
+                {% when 'list' %}
+                  {% for value in filter.values %}
+                    <label class="custom-collection__filter-label">
+                      <input
+                        class="custom-collection__filter-input js-custom-filters-input"
+                        type="checkbox"
+                        name="{{ filter.param_name }}"
+                        value="{{ value.value }}"
+                        {% if value.swatch.color %}
+                          style="background-color: {{ value.swatch.color }}"
+                        {% endif %}
+                        {% if value.active %}
+                          checked
+                        {% endif %}
+                      >
+                      {{ value.label }}
+                    </label>
+                  {% endfor %}
+
+                {% when 'price_range' %}
+                  <div class="custom-collection__filter-price">
+                    <div class="custom-collection__filter-price-field">
+                      <input
+                        class="custom-collection__filter-input-number js-custom-filters-input"
+                        type="number"
+                        name="{{ filter.min_value.param_name }}"
+                        value="{{ filter.min_value.value }}"
+                        placeholder="0"
+                      >
+
+                      <label class="custom-collection__filter-input-number-label">
+                        {{ cart.currency.symbol }}
+                      </label>
+                    </div>
+
+                    <div class="custom-collection__filter-price-field">
+                      <input
+                        class="custom-collection__filter-input-number js-custom-filters-input"
+                        type="number"
+                        name="{{ filter.max_value.param_name }}"
+                        value="{{ filter.max_value.value }}"
+                        placeholder="{{ filter.range_max | money_without_currency }}"
+                      >
+
+                      <label class="custom-collection__filter-input-number-label">
+                        {{ cart.currency.symbol }}
+                      </label>
+                    </div>
+                  </div>
+
+                  <p class="custom-collection__highest-price">The highest price is {{ filter.range_max | money }}</p>
+              {% endcase %}
+            </div>
+          {% endfor %}
+        </div>
       </div>
     </div>
   {% endif %}

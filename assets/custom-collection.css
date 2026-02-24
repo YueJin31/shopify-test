@@ -23,12 +23,36 @@
     }
   }
 
+  .custom-collection__filters-active {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+  }
+
+  .custom-collection__filters-active-btn {
+    background: none;
+    border-radius: 16px;
+    padding: 10px 16px;
+    border: 1px solid var(--light-gray);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    cursor: pointer;
+    gap: 8px;
+    align-items: center;
+  }
+
   .custom-collection__filters-wrapper {
     position: sticky;
+    top: 70px;
+  }
+
+  .custom-collection__filters-list {
     display: flex;
     flex-direction: column;
     gap: 30px;
-    top: 70px;
   }
 
   .custom-collection__filter {
@@ -185,7 +209,7 @@
     transition: filter 0.3s ease;
 
     &:hover {
-       filter: brightness(90%);
+      filter: brightness(90%);
     }
 
     &::before {
