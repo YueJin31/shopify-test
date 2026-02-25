@@ -6,8 +6,14 @@
       <div class="custom-collection__filters-wrapper js-custom-collection-active-filters-wrapper">
         {% assign has_active_filters = false %}
         {% for filter in collection.filters %}
-          {% if filter.active_values.size > 0 %}
+          {% if filter.type == 'list' and filter.active_values.size > 0 %}
             {% assign has_active_filters = true %}
+          {% endif %}
+
+          {% if filter.type == 'price_range' %}
+            {% if filter.min_value.value != blank or filter.max_value.value != blank %}
+              {% assign has_active_filters = true %}
+            {% endif %}
           {% endif %}
         {% endfor %}
 

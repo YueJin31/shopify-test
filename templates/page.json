@@ -6,7 +6,8 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "main": {
       "type": "main-page",
@@ -47,6 +48,7 @@
         "heading",
         "page-content"
       ],
+      "disabled": true,
       "settings": {
         "content_direction": "column",
         "gap": 32,
@@ -54,9 +56,134 @@
         "padding-block-start": 40,
         "padding-block-end": 80
       }
+    },
+    "trend_products_XrYewt": {
+      "type": "trend-products",
+      "blocks": {
+        "trend_item_RJEaR6": {
+          "type": "trend-item",
+          "settings": {
+            "image": "shopify://shop_images/image_18.jpg",
+            "product_1": "without-anything",
+            "product_1_horizontal": 11,
+            "product_1_vertical": 11,
+            "product_2": "the-collection-snowboard-oxygen",
+            "product_2_horizontal": 84,
+            "product_2_vertical": 67,
+            "product_3": "the-compare-at-price-snowboard",
+            "product_3_horizontal": 0,
+            "product_3_vertical": 100
+          }
+        },
+        "trend_item_AD7mAN": {
+          "type": "trend-item",
+          "settings": {
+            "image": "shopify://shop_images/image_18_1.jpg",
+            "product_1": "selling-plans-ski-wax",
+            "product_1_horizontal": 43,
+            "product_1_vertical": 34,
+            "product_2": "the-inventory-not-tracked-snowboard",
+            "product_2_horizontal": 53,
+            "product_2_vertical": 59,
+            "product_3": "the-collection-snowboard-liquid",
+            "product_3_horizontal": 23,
+            "product_3_vertical": 94
+          }
+        },
+        "trend_item_kKC4jF": {
+          "type": "trend-item",
+          "settings": {
+            "image": "shopify://shop_images/image_18_2.jpg",
+            "product_1": "the-3p-fulfilled-snowboard",
+            "product_1_horizontal": 50,
+            "product_1_vertical": 31,
+            "product_2": "the-multi-managed-snowboard",
+            "product_2_horizontal": 56,
+            "product_2_vertical": 48,
+            "product_3": "the-videographer-snowboard",
+            "product_3_horizontal": 49,
+            "product_3_vertical": 82
+          }
+        },
+        "trend_item_TMriJg": {
+          "type": "trend-item",
+          "settings": {
+            "image": "shopify://shop_images/image_18_3.jpg",
+            "product_1": "the-collection-snowboard-hydrogen",
+            "product_1_horizontal": 43,
+            "product_1_vertical": 55,
+            "product_2": "selling-plans-ski-wax",
+            "product_2_horizontal": 54,
+            "product_2_vertical": 62,
+            "product_3": "the-inventory-not-tracked-snowboard",
+            "product_3_horizontal": 50,
+            "product_3_vertical": 81
+          }
+        }
+      },
+      "block_order": [
+        "trend_item_RJEaR6",
+        "trend_item_AD7mAN",
+        "trend_item_kKC4jF",
+        "trend_item_TMriJg"
+      ],
+      "name": "Trend Products",
+      "settings": {
+        "heading": "Live inspired",
+        "text": "<p>We are on a mission to inspire and empower with positive messages. Wear your MantraBand® every day as your daily reminder, affirmation, and inspiration.</p>",
+        "button_label": "Read More",
+        "button_link": "shopify://collections"
+      }
+    },
+    "trend_products_k3EUxj": {
+      "type": "trend-products",
+      "blocks": {
+        "trend_item_rdTCjx": {
+          "type": "trend-item",
+          "settings": {
+            "image": "shopify://shop_images/599-1000x1000.jpg",
+            "product_1": "the-out-of-stock-snowboard",
+            "product_1_horizontal": 82,
+            "product_1_vertical": 25,
+            "product_2": "the-3p-fulfilled-snowboard",
+            "product_2_horizontal": 64,
+            "product_2_vertical": 50,
+            "product_3": "the-videographer-snowboard",
+            "product_3_horizontal": 50,
+            "product_3_vertical": 36
+          }
+        },
+        "trend_item_qwfxtz": {
+          "type": "trend-item",
+          "settings": {
+            "product_1": "the-compare-at-price-snowboard",
+            "product_1_horizontal": 20,
+            "product_1_vertical": 76,
+            "product_2": "the-collection-snowboard-liquid",
+            "product_2_horizontal": 50,
+            "product_2_vertical": 50,
+            "product_3": "the-compare-at-price-snowboard",
+            "product_3_horizontal": 10,
+            "product_3_vertical": 50
+          }
+        }
+      },
+      "block_order": [
+        "trend_item_rdTCjx",
+        "trend_item_qwfxtz"
+      ],
+      "name": "Trend Products",
+      "settings": {
+        "heading": "Heading",
+        "text": "<p><strong>Lorem Ipsum</strong>is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.<br/><br/></p>",
+        "button_label": "",
+        "button_link": "shopify://policies/privacy-policy"
+      }
     }
   },
   "order": [
-    "main"
+    "main",
+    "trend_products_XrYewt",
+    "trend_products_k3EUxj"
   ]
 }
