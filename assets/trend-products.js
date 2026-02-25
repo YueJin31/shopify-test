@@ -92,7 +92,7 @@ function initTrendProductsSection(section) {
 
       if (content) positionSpotContent(button, content);
     });
-  }, 300);
+  });
 
   window.addEventListener("resize", debouncedResize);
 }
