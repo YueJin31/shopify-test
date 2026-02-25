@@ -5,7 +5,6 @@
   padding: 0 var(--content-padding);
   max-width: calc(1648px + var(--content-padding) * 2);
   margin: 0 auto;
-  gap: 25px;
   position: relative;
 
   &:first-of-type {
@@ -186,7 +185,10 @@
     cursor: pointer;
     font-family: var(--button-font-family-primary);
     position: relative;
-    color: var(--black);
+
+    &:not(:disabled) {
+      color: var(--black);
+    }
 
     &::after {
       content: "";
@@ -199,8 +201,12 @@
       transition: transform 0.3s ease;
     }
 
-    &:disabled::after {
-      background: var(--light-gray);
+    &:disabled {
+      cursor: not-allowed;
+
+      &::after {
+        background: var(--light-gray);
+      }
     }
 
     &:hover::after {
