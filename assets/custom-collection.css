@@ -36,6 +36,7 @@
     padding: 10px 16px;
     border: 1px solid var(--light-gray);
     display: flex;
+    color: var(--black);
     align-items: center;
     justify-content: center;
     font-weight: 500;
