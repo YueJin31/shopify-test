@@ -130,8 +130,7 @@
 
   .trend-products__spot-title {
     color: var(--gray);
-    position: relative;
-    transition: color 0.3s ease;
+      transition: color 0.3s ease;
 
     &:hover {
       text-decoration: underline;

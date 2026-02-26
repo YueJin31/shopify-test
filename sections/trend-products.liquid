@@ -46,6 +46,9 @@
                 alt="{{ block.settings.image.alt | escape }}"
                 width="400"
                 height="498"
+                {% if section.index > 1 %}
+                  loading="lazy"
+                {% endif %}
               >
             </picture>
           {% else %}
@@ -64,71 +67,67 @@
             {% assign pos_y = block.settings[pos_y_key] %}
 
             {% if product != blank %}
-              <button
-                class="trend-products__spot-button js-trend-products-spot-button"
-                style="left: {{ pos_x }}%; top: {{ pos_y }}%; transform: translate(-{{ pos_x }}%, -{{ pos_y }}%);"
-                aria-label="Open Spot Content"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M12 4L4 12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M4 4L12 12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </button>
+              <div class="trend-products__spot">
+                <button
+                  class="trend-products__spot-button js-trend-products-spot-button"
+                  style="left: {{ pos_x }}%; top: {{ pos_y }}%; transform: translate(-{{ pos_x }}%, -{{ pos_y }}%);"
+                  aria-label="Open Spot Content"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M12 4L4 12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M4 4L12 12" stroke="black" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
 
-              <div class="trend-products__spot-content js-trend-products-spot-content">
-                <div class="trend-products__spot-content-image-wrapper">
-                  {% if product.featured_image != blank %}
-                    <a
-                      class="trend-products__spot-link"
-                      href="{{ product.url }}"
-                    >
-                      <img
-                        class="trend-products__spot-content-image"
-                        src="{{ product.featured_image | image_url: width: 64 }}"
-                        srcset="
-                          {{ product.featured_image | image_url: width: 64 }} 1x,
-                          {{ product.featured_image | image_url: width: 128 }} 2x
-                        "
-                        alt="{{ product.featured_image.alt | escape }}"
-                        width="64"
-                        height="64"
-                        loading="lazy"
-                      >
-                    </a>
+                <div class="trend-products__spot-content js-trend-products-spot-content">
+                  <div class="trend-products__spot-content-image-wrapper">
+                    {% if product.featured_image != blank %}
+                      <a class="trend-products__spot-link" href="{{ product.url }}">
+                        <img
+                          class="trend-products__spot-content-image"
+                          src="{{ product.featured_image | image_url: width: 64 }}"
+                          srcset="
+                            {{ product.featured_image | image_url: width: 64 }} 1x,
+                            {{ product.featured_image | image_url: width: 128 }} 2x
+                          "
+                          alt="{{ product.featured_image.alt | escape }}"
+                          width="64"
+                          height="64"
+                          loading="lazy"
+                        >
+                      </a>
 
-                  {% else %}
-                    <a class="trend-products__spot-link" href="{{ product.url }}">
-                      {{ 'product-apparel-1' | placeholder_svg_tag: 'trend-products__spot-content-svg' }}
-                    </a>
-                  {% endif %}
-                </div>
-
-                <div class="trend-products__spot-content-data">
-                  <a
-                    class="trend-products__spot-title"
-                    href="{{ product.url }}"
-                  >
-                    {{ product.title }}
-                  </a>
-
-                  <span class="trend-products__spot-price">
-                    {{ product.selected_or_first_available_variant.price | money }}
-                  </span>
-
-                  <button
-                    type="button"
-                    class="trend-products__spot-add-to-cart js-add-to-cart"
-                    data-variant-id="{{ product.selected_or_first_available_variant.id }}"
-                    {% unless product.selected_or_first_available_variant.available %}
-                      disabled
-                    {% endunless %}
-                  >
-                    {% if product.selected_or_first_available_variant.available %}
-                      Add to cart
                     {% else %}
-                      Sold out
+                      <a class="trend-products__spot-link" href="{{ product.url }}">
+                        {{ 'product-apparel-1' | placeholder_svg_tag: 'trend-products__spot-content-svg' }}
+                      </a>
                     {% endif %}
-                  </button>
+                  </div>
+
+                  <div class="trend-products__spot-content-data">
+                    <a class="trend-products__spot-title" href="{{ product.url }}">
+                      {{ product.title }}
+                    </a>
+
+                    <span class="trend-products__spot-price">
+                      {{ product.selected_or_first_available_variant.price | money }}
+                    </span>
+
+                    <button
+                      type="button"
+                      class="trend-products__spot-add-to-cart js-add-to-cart"
+                      data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                      {% unless product.selected_or_first_available_variant.available %}
+                        disabled
+                      {% endunless %}
+                    >
+                      {% if product.selected_or_first_available_variant.available %}
+                        Add to cart
+                      {% else %}
+                        Sold out
+                      {% endif %}
+                    </button>
+                  </div>
                 </div>
               </div>
             {% endif %}
