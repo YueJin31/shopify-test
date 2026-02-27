@@ -299,6 +299,7 @@
 
   .mini-cart__upsell-products__button {
     border: 1px solid var(--black);
+    color: var(--black);
     padding: 8px 16px;
     border-radius: 32px;
     font-weight: 500;
@@ -564,6 +565,7 @@
   }
 
   .mini-cart__note-accordion-title {
+    color: var(--black);
     font-weight: 500;
     font-size: 16px;
     line-height: 1.5;

@@ -23,12 +23,15 @@ const COLLECTION_CLASSES = {
 function initSwatches(block) {
   block.addEventListener("click", (e) => {
     const swatch = e.target.closest(COLLECTION_SELECTORS.swatchItem);
+
     if (!swatch) return;
 
     const productItem = swatch.closest(COLLECTION_SELECTORS.productItem);
+
     if (!productItem) return;
 
     const swatches = productItem.querySelector(COLLECTION_SELECTORS.swatchContainer);
+
     if (!swatches) return;
 
     setActiveSwatch(swatches, swatch);
@@ -53,6 +56,7 @@ function updateProductUI(productItem, { variantPrice, variantComparePrice, varia
   }
 
   const productPriceElement = productItem.querySelector(COLLECTION_SELECTORS.productPrice);
+
   if (variantPrice && productPriceElement) {
     productPriceElement.textContent = variantPrice;
   }
@@ -65,6 +69,7 @@ function updateProductUI(productItem, { variantPrice, variantComparePrice, varia
       productComparePrice.textContent = variantComparePrice;
     } else {
       const comparePrice = document.createElement("span");
+
       comparePrice.className = "collection-products__item-price collection-products__item-price--old js-collection-products-compare-price";
       comparePrice.textContent = variantComparePrice;
       productPriceElement.after(comparePrice);
@@ -86,6 +91,7 @@ function initSwiper(block) {
   const { swiperContainer, productItem, emptyCartContainer } = COLLECTION_SELECTORS;
 
   const swiperEl = block.querySelector(swiperContainer);
+
   if (!swiperEl) return;
 
   const isEmptyCart = swiperEl.closest(emptyCartContainer);
