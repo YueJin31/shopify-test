@@ -50,7 +50,7 @@
         bottom: 0;
         width: 100%;
         height: 1px;
-        background: #b9b9b9;
+        background: var(--comfort-gray);
         transition: background 0.3s ease;
       }
     }
@@ -108,7 +108,7 @@
 .modal__inner-content {
   overflow-y: auto;
   flex: 1;
-  scrollbar-color: #b9b9b9 transparent;
+  scrollbar-color: var(--comfort-gray) transparent;
   padding-right: 12px;
 }
 

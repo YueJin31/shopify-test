@@ -599,7 +599,7 @@
     margin-top: 16px;
     height: 120px;
     border-radius: 32px;
-    border: 1px solid #b9b9b9;
+    border: 1px solid var(--comfort-gray);
     padding: 16px 24px;
     color: var(--black);
     resize: none;
