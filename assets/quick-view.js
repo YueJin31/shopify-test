@@ -188,9 +188,7 @@ function QuickViewInit() {
     const miniCart = document.querySelector(QUICK_VIEW_SELECTORS.miniCart);
     const isMiniCartActive = miniCart?.classList.contains(QUICK_VIEW_CLASSES.active);
 
-    if (!isMiniCartActive) {
-      document.body.style.overflow = "";
-    }
+    if (!isMiniCartActive) document.body.style.overflow = "";
 
     if (mainSwiper) {
       mainSwiper.destroy(true, true);

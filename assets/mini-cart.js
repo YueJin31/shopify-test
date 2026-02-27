@@ -72,6 +72,7 @@ const showLoader = (block) => {
 const hideLoader = (block) => {
   block.classList.remove(MINI_CART_CLASSES.loading);
   const loader = block.querySelector(`.${MINI_CART_CLASSES.loader}`);
+
   if (loader) loader.remove();
 };
 

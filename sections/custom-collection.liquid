@@ -5,6 +5,7 @@
     <div class="custom-collection__filters">
       <div class="custom-collection__filters-wrapper js-custom-collection-active-filters-wrapper">
         {% assign has_active_filters = false %}
+
         {% for filter in collection.filters %}
           {% if filter.type == 'list' and filter.active_values.size > 0 %}
             {% assign has_active_filters = true %}
