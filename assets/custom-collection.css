@@ -77,7 +77,7 @@
   }
 
   .custom-collection__filter-input-number {
-    border: 1px solid #b9b9b9;
+    border: 1px solid var(--comfort-gray);
     border-radius: 12px;
     padding: 5px 15px 5px 30px;
     width: 100%;
