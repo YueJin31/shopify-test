@@ -65,6 +65,10 @@
     @media (max-width: 991px) {
       flex: 0 0 85%;
     }
+
+    @media (min-width: 992px) {
+      width: calc(100% / 4 - 48px / 4);
+    }
   }
 
   .trend-products__item-image,
