@@ -2,6 +2,7 @@ const TREND_PRODUCTS_SELECTORS = {
   section: ".js-trend-products",
   trendProductSpotButton: ".js-trend-products-spot-button",
   trendProductSpotContent: ".js-trend-products-spot-content",
+  trendProductSpot: ".js-trend-products-spot",
   trendProductItem: ".js-trend-products-item",
 };
 
@@ -46,7 +47,8 @@ function closeActiveSpot(section) {
 
   if (!activeButton) return;
 
-  const activeContent = activeButton.nextElementSibling;
+  const spot = activeButton.closest(TREND_PRODUCTS_SELECTORS.trendProductSpot);
+  const activeContent = spot?.querySelector(TREND_PRODUCTS_SELECTORS.trendProductSpotContent);
 
   activeButton.classList.remove(TREND_PRODUCTS_CLASSES.active);
   activeContent?.classList.remove(TREND_PRODUCTS_CLASSES.active);
