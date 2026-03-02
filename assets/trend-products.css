@@ -126,8 +126,10 @@
       opacity: 1;
     }
 
-    @media (min-width: 1023px) and (max-width: 1200px) {
+    @media (min-width: 992px) and (max-width: 1200px) {
       max-width: 200px;
+      font-size: 10px;
+      padding: 10px;
     }
   }
 
@@ -222,6 +224,10 @@
 
     &:hover::after {
       transform: translateY(-3px);
+    }
+
+    @media (min-width: 992px) and (max-width: 1200px) {
+      font-size: 10px;
     }
   }
 }
